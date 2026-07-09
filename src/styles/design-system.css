@@ -1,0 +1,168 @@
+/* ==========================================================================
+   MATCHFUN DESIGN SYSTEM
+   Tap. Predict. Celebrate.
+
+   Brand direction — dark stadium-energy. MatchFun lives in the two hours
+   before kickoff and the ninety minutes after: floodlights, tunnel smoke,
+   a crowd that reacts half a second before the replay confirms it. Every
+   token below is built off that: a near-black "night pitch" base with
+   three signal colors doing exactly one job each — carnival orange for
+   action, teal for live data, yellow for reward. Nothing else competes
+   with them.
+
+   This file is intentionally dark-only. Sports-live products (Sofascore,
+   Flashscore, DraftKings) are dark-first because the app is designed to
+   be read at a glance, one-handed, often at night, next to an actual
+   broadcast — a light theme would fight the floodlight identity rather
+   than extend it.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------
+     COLOR — OKLCH. Each hue has exactly one job:
+     orange = act, teal = live/data, yellow = reward, red = danger/error.
+     ------------------------------------------------------------------ */
+
+  /* Surfaces — "night pitch" depth scale, darkest to most elevated */
+  --bg-void: oklch(13% 0.02 264);
+  --bg-base: oklch(16% 0.024 264);
+  --bg-surface: oklch(20% 0.026 262);
+  --bg-surface-2: oklch(24% 0.028 261);
+  --bg-surface-3: oklch(29% 0.03 260);
+  --bg-overlay: oklch(10% 0.02 265 / 0.86);
+
+  /* Borders */
+  --border-subtle: oklch(32% 0.02 258);
+  --border-default: oklch(38% 0.026 257);
+  --border-strong: oklch(48% 0.03 255);
+
+  /* Text */
+  --text-primary: oklch(97% 0.006 260);
+  --text-secondary: oklch(78% 0.016 258);
+  --text-tertiary: oklch(62% 0.018 258);
+  --text-disabled: oklch(42% 0.016 258);
+  --text-on-color: oklch(14% 0.02 264);
+
+  /* Carnival Orange — PRIMARY. Action: predict, confirm, primary CTA. */
+  --orange-300: oklch(83% 0.12 44);
+  --orange-400: oklch(75% 0.165 43);
+  --orange-500: oklch(68% 0.191 42);
+  --orange-600: oklch(59% 0.185 39);
+  --orange-700: oklch(49% 0.16 36);
+  --orange-glow: oklch(68% 0.191 42 / 0.38);
+
+  /* Teal — SECONDARY. Live data, odds, ticker, scorelines. */
+  --teal-300: oklch(85% 0.075 196);
+  --teal-400: oklch(76% 0.1 195);
+  --teal-500: oklch(68% 0.115 194);
+  --teal-600: oklch(58% 0.108 193);
+  --teal-700: oklch(46% 0.09 192);
+  --teal-glow: oklch(68% 0.115 194 / 0.35);
+
+  /* Yellow — ACCENT. Rewards: streaks, NFTs, leaderboard #1. Use sparingly. */
+  --yellow-300: oklch(92% 0.09 95);
+  --yellow-400: oklch(88% 0.135 93);
+  --yellow-500: oklch(83% 0.165 91);
+  --yellow-600: oklch(73% 0.16 80);
+  --yellow-700: oklch(62% 0.15 65);
+  --yellow-glow: oklch(83% 0.165 91 / 0.4);
+
+  /* Semantic */
+  --success: oklch(72% 0.17 148);
+  --success-bg: oklch(72% 0.17 148 / 0.14);
+  --warning: oklch(80% 0.15 75);
+  --warning-bg: oklch(80% 0.15 75 / 0.14);
+  --error: oklch(63% 0.213 26);
+  --error-bg: oklch(63% 0.213 26 / 0.14);
+  --live: oklch(72% 0.19 148);
+
+  /* Gradients — one per emotional beat, never combined on one surface */
+  --gradient-hero: linear-gradient(135deg, oklch(68% 0.191 42) 0%, oklch(56% 0.19 18) 100%);
+  --gradient-streak: linear-gradient(135deg, oklch(83% 0.165 91) 0%, oklch(68% 0.191 42) 100%);
+  --gradient-nft: linear-gradient(135deg, oklch(68% 0.115 194) 0%, oklch(48% 0.14 288) 100%);
+  --gradient-scrim: linear-gradient(180deg, transparent 0%, oklch(13% 0.02 264 / 0.92) 100%);
+
+  /* ------------------------------------------------------------------
+     TYPOGRAPHY
+     ------------------------------------------------------------------ */
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text-display: 800 clamp(2.75rem, 2.1rem + 2.6vw, 4.25rem) / 1.02
+    var(--font-display);
+  --text-h1: 800 clamp(2rem, 1.7rem + 1.2vw, 2.75rem) / 1.08
+    var(--font-display);
+  --text-h2: 800 clamp(1.625rem, 1.45rem + 0.7vw, 2rem) / 1.15
+    var(--font-display);
+  --text-h3: 700 1.5rem / 1.25 var(--font-display);
+  --text-h4: 700 1.25rem / 1.35 var(--font-display);
+  --text-h5: 600 1.0625rem / 1.4 var(--font-display);
+  --text-h6: 600 0.9375rem / 1.4 var(--font-display);
+  --text-body-lg: 400 1.0625rem / 1.6 var(--font-body);
+  --text-body: 400 0.9375rem / 1.55 var(--font-body);
+  --text-body-sm: 400 0.8125rem / 1.5 var(--font-body);
+  --text-caption: 600 0.75rem / 1.4 var(--font-body);
+  --tracking-caption: 0.08em;
+  --tracking-tight: -0.02em;
+
+  /* ------------------------------------------------------------------
+     SPACING — 4px base grid
+     ------------------------------------------------------------------ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ------------------------------------------------------------------
+     RADIUS
+     ------------------------------------------------------------------ */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* ------------------------------------------------------------------
+     SHADOWS — depth is mostly a black shadow on dark surfaces;
+     glows are reserved for interactive/selected states.
+     ------------------------------------------------------------------ */
+  --shadow-drop: 0 1px 2px oklch(0% 0 0 / 0.35);
+  --shadow-soft: 0 2px 8px oklch(0% 0 0 / 0.3), 0 1px 2px oklch(0% 0 0 / 0.24);
+  --shadow-medium: 0 8px 20px oklch(0% 0 0 / 0.38),
+    0 2px 6px oklch(0% 0 0 / 0.24);
+  --shadow-heavy: 0 20px 48px oklch(0% 0 0 / 0.48),
+    0 6px 16px oklch(0% 0 0 / 0.32);
+  --shadow-glow-orange: 0 0 0 1px oklch(68% 0.191 42 / 0.4),
+    0 0 24px var(--orange-glow);
+  --shadow-glow-teal: 0 0 0 1px oklch(68% 0.115 194 / 0.4),
+    0 0 24px var(--teal-glow);
+  --shadow-glow-yellow: 0 0 0 1px oklch(83% 0.165 91 / 0.45),
+    0 0 24px var(--yellow-glow);
+
+  /* ------------------------------------------------------------------
+     MOTION
+     ------------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 360ms;
+  --dur-celebrate: 640ms;
+
+  /* ------------------------------------------------------------------
+     LAYOUT
+     ------------------------------------------------------------------ */
+  --container-mobile: 100%;
+  --container-tablet: 720px;
+  --container-desktop: 1200px;
+  --container-wide: 1360px;
+  --nav-width: 264px;
+}

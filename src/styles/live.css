@@ -1,0 +1,168 @@
+/* ==========================================================================
+   LIVE / MATCH VIEW
+   ========================================================================== */
+
+/* Filter bar */
+.live-filters {
+  margin-bottom: var(--space-6);
+}
+
+/* Section */
+.live-section {
+  margin-bottom: var(--space-7);
+}
+
+/* Match list stack */
+.live-match-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.live-match-link {
+  text-decoration: none;
+  display: block;
+}
+
+/* Match card footer row (predictions open count + CTA) */
+.match-card__footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.match-card__pred-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font: var(--text-caption);
+  color: var(--text-tertiary);
+}
+
+.match-card__pred-count svg {
+  fill: none;
+  stroke: var(--text-tertiary);
+}
+
+.match-card__predict-cta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font: 600 0.8125rem / 1.4 var(--font-body);
+  color: var(--carnival);
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.match-card__predict-cta svg {
+  fill: none;
+  stroke: var(--carnival);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.live-match-link:hover .match-card__predict-cta svg {
+  transform: translateX(2px);
+}
+
+/* ─── Match View ─────────────────────────────────────────────────────────── */
+
+.mv-match-header {
+  margin-bottom: var(--space-5);
+}
+
+.mv-streak-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.mv-pred-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Team crest large (match view) */
+.team-crest--lg {
+  width: 40px;
+  height: 40px;
+}
+
+/* ─── Prediction Card ────────────────────────────────────────────────────── */
+
+.pred-card__timer {
+  font: 700 0.75rem / 1.4 var(--font-mono);
+  color: var(--carnival);
+  text-align: right;
+}
+
+.pred-card__hint {
+  font: var(--text-caption);
+  color: var(--text-tertiary);
+}
+
+/* ─── Prediction Tile Interactive ────────────────────────────────────────── */
+
+.pred-tile {
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.pred-tile.is-selected {
+  background: var(--carnival-bg);
+  border-color: var(--carnival);
+  box-shadow: 0 0 0 2px var(--carnival);
+}
+
+.pred-tile.is-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Empty State ────────────────────────────────────────────────────────── */
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-10) var(--space-4);
+}
+
+.empty-state__icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-3);
+  color: var(--text-tertiary);
+}
+
+.empty-state__icon svg {
+  fill: none;
+  stroke: currentColor;
+  width: 100%;
+  height: 100%;
+}
+
+.empty-state__title {
+  font: 600 1rem / 1.4 var(--font-body);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.empty-state__desc {
+  font: var(--text-body-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .team-crest--lg {
+    width: 32px;
+    height: 32px;
+  }
+}

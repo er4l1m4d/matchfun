@@ -1,0 +1,106 @@
+/* ==========================================================================
+   HOME PAGE
+   ========================================================================== */
+
+/* Greeting row */
+.home-greeting {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+/* Section spacing */
+.home-section {
+  margin-bottom: var(--space-7);
+}
+
+/* Match list stack */
+.home-match-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.home-match-link {
+  text-decoration: none;
+  display: block;
+}
+
+/* Quick picks grid */
+.home-quick-picks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+/* Prediction match label inside quick pick */
+.pred-card__match-label {
+  font: var(--text-caption);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caption);
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+/* Predictions card */
+.home-predictions-card {
+  padding: var(--space-3) var(--space-4);
+}
+
+/* Prediction result icon */
+.pred-result-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.pred-result-icon--correct {
+  background: var(--success-bg);
+}
+
+.pred-result-icon--correct svg {
+  stroke: var(--success);
+}
+
+.pred-result-icon--incorrect {
+  background: var(--error-bg);
+}
+
+.pred-result-icon--incorrect svg {
+  stroke: var(--error);
+}
+
+/* Prediction result points */
+.pred-result-pts {
+  font: 700 0.875rem / 1 var(--font-mono);
+  flex-shrink: 0;
+}
+
+.pred-result-pts--correct {
+  color: var(--success);
+}
+
+.pred-result-pts--incorrect {
+  color: var(--error);
+}
+
+/* VS text for upcoming matches */
+.match-card__score--vs {
+  color: var(--text-tertiary);
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .home-greeting {
+    flex-wrap: wrap;
+  }
+
+  .home-quick-picks {
+    grid-template-columns: 1fr;
+  }
+}

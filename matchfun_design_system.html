@@ -1,0 +1,2417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MatchFun — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   MATCHFUN DESIGN SYSTEM
+   Tap. Predict. Celebrate.
+
+   Brand direction — dark stadium-energy. MatchFun lives in the two hours
+   before kickoff and the ninety minutes after: floodlights, tunnel smoke,
+   a crowd that reacts half a second before the replay confirms it. Every
+   token below is built off that: a near-black "night pitch" base with
+   three signal colors doing exactly one job each — carnival orange for
+   action, teal for live data, yellow for reward. Nothing else competes
+   with them.
+
+   This file is intentionally dark-only. Sports-live products (Sofascore,
+   Flashscore, DraftKings) are dark-first because the app is designed to
+   be read at a glance, one-handed, often at night, next to an actual
+   broadcast — a light theme would fight the floodlight identity rather
+   than extend it. See "Usage Guidelines → Why no light mode" below.
+   ========================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* ------------------------------------------------------------------
+     COLOR — OKLCH. Each hue has exactly one job:
+     orange = act, teal = live/data, yellow = reward, red = danger/error.
+     ------------------------------------------------------------------ */
+
+  /* Surfaces — "night pitch" depth scale, darkest to most elevated */
+  --bg-void:        oklch(13% 0.020 264);   /* page background */
+  --bg-base:        oklch(16% 0.024 264);   /* section background */
+  --bg-surface:     oklch(20% 0.026 262);   /* card */
+  --bg-surface-2:   oklch(24% 0.028 261);   /* elevated card / hover */
+  --bg-surface-3:   oklch(29% 0.030 260);   /* popover / modal surface */
+  --bg-overlay:     oklch(10% 0.020 265 / 0.86);
+
+  /* Borders */
+  --border-subtle:  oklch(32% 0.020 258);
+  --border-default: oklch(38% 0.026 257);
+  --border-strong:  oklch(48% 0.030 255);
+
+  /* Text */
+  --text-primary:   oklch(97% 0.006 260);
+  --text-secondary: oklch(78% 0.016 258);
+  --text-tertiary:  oklch(62% 0.018 258);
+  --text-disabled:  oklch(42% 0.016 258);
+  --text-on-color:  oklch(14% 0.020 264);   /* text sitting on bright fills */
+
+  /* Carnival Orange — PRIMARY. Action: predict, confirm, primary CTA. */
+  --orange-300: oklch(83% 0.12  44);
+  --orange-400: oklch(75% 0.165 43);
+  --orange-500: oklch(68% 0.191 42);   /* base */
+  --orange-600: oklch(59% 0.185 39);
+  --orange-700: oklch(49% 0.160 36);
+  --orange-glow: oklch(68% 0.191 42 / 0.38);
+
+  /* Teal — SECONDARY. Live data, odds, ticker, scorelines. */
+  --teal-300: oklch(85% 0.075 196);
+  --teal-400: oklch(76% 0.100 195);
+  --teal-500: oklch(68% 0.115 194);   /* base */
+  --teal-600: oklch(58% 0.108 193);
+  --teal-700: oklch(46% 0.090 192);
+  --teal-glow: oklch(68% 0.115 194 / 0.35);
+
+  /* Yellow — ACCENT. Rewards: streaks, NFTs, leaderboard #1. Use sparingly. */
+  --yellow-300: oklch(92% 0.09  95);
+  --yellow-400: oklch(88% 0.135 93);
+  --yellow-500: oklch(83% 0.165 91);  /* base */
+  --yellow-600: oklch(73% 0.160 80);
+  --yellow-700: oklch(62% 0.150 65);
+  --yellow-glow: oklch(83% 0.165 91 / 0.40);
+
+  /* Semantic */
+  --success:      oklch(72% 0.170 148);
+  --success-bg:   oklch(72% 0.170 148 / 0.14);
+  --warning:      oklch(80% 0.150 75);
+  --warning-bg:   oklch(80% 0.150 75 / 0.14);
+  --error:        oklch(63% 0.213 26);
+  --error-bg:     oklch(63% 0.213 26 / 0.14);
+  --live:         oklch(72% 0.19 148);      /* live-match pulse, reuses success hue */
+
+  /* Gradients — one per emotional beat, never combined on one surface */
+  --gradient-hero:   linear-gradient(135deg, oklch(68% 0.191 42) 0%, oklch(56% 0.19 18) 100%);
+  --gradient-streak: linear-gradient(135deg, oklch(83% 0.165 91) 0%, oklch(68% 0.191 42) 100%);
+  --gradient-nft:    linear-gradient(135deg, oklch(68% 0.115 194) 0%, oklch(48% 0.14 288) 100%);
+  --gradient-scrim:  linear-gradient(180deg, transparent 0%, oklch(13% 0.02 264 / 0.92) 100%);
+
+  /* ------------------------------------------------------------------
+     TYPOGRAPHY
+     ------------------------------------------------------------------ */
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --text-display: 800 clamp(2.75rem, 2.1rem + 2.6vw, 4.25rem)/1.02 var(--font-display);
+  --text-h1: 800 clamp(2rem, 1.7rem + 1.2vw, 2.75rem)/1.08 var(--font-display);
+  --text-h2: 800 clamp(1.625rem, 1.45rem + 0.7vw, 2rem)/1.15 var(--font-display);
+  --text-h3: 700 1.5rem/1.25 var(--font-display);
+  --text-h4: 700 1.25rem/1.35 var(--font-display);
+  --text-h5: 600 1.0625rem/1.4 var(--font-display);
+  --text-h6: 600 0.9375rem/1.4 var(--font-display);
+  --text-body-lg: 400 1.0625rem/1.6 var(--font-body);
+  --text-body: 400 0.9375rem/1.55 var(--font-body);
+  --text-body-sm: 400 0.8125rem/1.5 var(--font-body);
+  --text-caption: 600 0.75rem/1.4 var(--font-body);
+  --tracking-caption: 0.08em;
+  --tracking-tight: -0.02em;
+
+  /* ------------------------------------------------------------------
+     SPACING — 4px base grid
+     ------------------------------------------------------------------ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ------------------------------------------------------------------
+     RADIUS
+     ------------------------------------------------------------------ */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* ------------------------------------------------------------------
+     SHADOWS — depth is mostly a black shadow on dark surfaces;
+     glows are reserved for interactive/selected states.
+     ------------------------------------------------------------------ */
+  --shadow-drop:   0 1px 2px oklch(0% 0 0 / 0.35);
+  --shadow-soft:   0 2px 8px oklch(0% 0 0 / 0.30), 0 1px 2px oklch(0% 0 0 / 0.24);
+  --shadow-medium: 0 8px 20px oklch(0% 0 0 / 0.38), 0 2px 6px oklch(0% 0 0 / 0.24);
+  --shadow-heavy:  0 20px 48px oklch(0% 0 0 / 0.48), 0 6px 16px oklch(0% 0 0 / 0.32);
+  --shadow-glow-orange: 0 0 0 1px oklch(68% 0.191 42 / 0.4), 0 0 24px var(--orange-glow);
+  --shadow-glow-teal:   0 0 0 1px oklch(68% 0.115 194 / 0.4), 0 0 24px var(--teal-glow);
+  --shadow-glow-yellow: 0 0 0 1px oklch(83% 0.165 91 / 0.45), 0 0 24px var(--yellow-glow);
+
+  /* ------------------------------------------------------------------
+     MOTION
+     ------------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 360ms;
+  --dur-celebrate: 640ms;
+
+  /* ------------------------------------------------------------------
+     LAYOUT
+     ------------------------------------------------------------------ */
+  --container-mobile: 100%;
+  --container-tablet: 720px;
+  --container-desktop: 1200px;
+  --container-wide: 1360px;
+  --nav-width: 264px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font: var(--text-body);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse 900px 500px at 15% -10%, oklch(68% 0.191 42 / 0.12), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%, oklch(68% 0.115 194 / 0.10), transparent 55%);
+  background-attachment: fixed;
+}
+
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+
+:focus-visible {
+  outline: 2px solid var(--teal-400);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Utility: tabular numerals for anything that updates live (odds, scores, timers) */
+.mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--orange-500);
+  color: var(--text-on-color);
+}
+
+/* Scrollbar (webkit) — thin, on-brand */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb { background: var(--bg-surface-3); border-radius: var(--radius-pill); border: 2px solid var(--bg-void); }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* ==========================================================================
+   LAYOUT SHELL
+   ========================================================================== */
+
+.shell {
+  display: grid;
+  grid-template-columns: var(--nav-width) 1fr;
+  min-height: 100vh;
+}
+
+.sidenav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-4) var(--space-6);
+  border-right: 1px solid var(--border-subtle);
+  background: oklch(15% 0.022 264 / 0.7);
+  backdrop-filter: blur(12px);
+}
+
+.sidenav__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-5);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sidenav__brand-mark {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-hero);
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-glow-orange);
+  flex-shrink: 0;
+}
+.sidenav__brand-mark svg { width: 18px; height: 18px; stroke: var(--text-on-color); }
+
+.sidenav__brand-text { font: var(--text-h6); font-weight: 800; letter-spacing: var(--tracking-tight); }
+.sidenav__brand-sub { font: var(--text-caption); color: var(--text-tertiary); letter-spacing: var(--tracking-caption); text-transform: uppercase; }
+
+.sidenav__group { margin-bottom: var(--space-5); }
+.sidenav__group-label {
+  font: var(--text-caption);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caption);
+  color: var(--text-tertiary);
+  padding: 0 var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.sidenav__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font: var(--text-body-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  position: relative;
+}
+.sidenav__link:hover { background: var(--bg-surface); color: var(--text-primary); }
+.sidenav__link.is-active {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+.sidenav__link.is-active::before {
+  content: '';
+  position: absolute;
+  left: -13px;
+  top: 50%; transform: translateY(-50%);
+  width: 3px; height: 16px;
+  border-radius: var(--radius-pill);
+  background: var(--orange-500);
+  box-shadow: 0 0 8px var(--orange-glow);
+}
+
+.main {
+  min-width: 0;
+  padding-bottom: var(--space-9);
+}
+
+.mobile-nav-toggle { display: none; }
+
+@media (max-width: 960px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidenav {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(280px, 82vw);
+    z-index: 60;
+    transform: translateX(-100%);
+    transition: transform var(--dur-base) var(--ease-out);
+    box-shadow: var(--shadow-heavy);
+  }
+  .sidenav.is-open { transform: translateX(0); }
+  .nav-scrim {
+    position: fixed; inset: 0; background: var(--bg-overlay);
+    z-index: 55; opacity: 0; pointer-events: none;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .nav-scrim.is-open { opacity: 1; pointer-events: auto; }
+  .mobile-nav-toggle {
+    display: flex; align-items: center; gap: var(--space-2);
+    position: fixed; top: var(--space-4); left: var(--space-4);
+    z-index: 65; background: var(--bg-surface-2); border: 1px solid var(--border-default);
+    padding: var(--space-2) var(--space-3); border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-medium); font: var(--text-body-sm); font-weight: 600;
+  }
+  .mobile-nav-toggle svg { width: 16px; height: 16px; stroke: currentColor; }
+}
+
+.section-container {
+  max-width: var(--container-wide);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+@media (max-width: 640px) {
+  .section-container { padding: 0 var(--space-4); }
+}
+
+.section {
+  padding: var(--space-8) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  scroll-margin-top: var(--space-4);
+}
+
+.section__eyebrow {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption);
+  color: var(--orange-400); margin-bottom: var(--space-2);
+}
+.section__eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--orange-500);
+  box-shadow: 0 0 8px var(--orange-glow);
+}
+.section__title { font: var(--text-h2); letter-spacing: var(--tracking-tight); margin-bottom: var(--space-3); }
+.section__desc { font: var(--text-body-lg); color: var(--text-secondary); max-width: 62ch; margin-bottom: var(--space-6); }
+
+.subhead {
+  font: var(--text-h5);
+  margin: var(--space-6) 0 var(--space-3);
+  display: flex; align-items: center; gap: var(--space-2);
+}
+.subhead .tag-count {
+  font: var(--text-caption); font-family: var(--font-mono); color: var(--text-tertiary);
+  background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  padding: 2px 8px; border-radius: var(--radius-pill);
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-9) var(--space-6) var(--space-8);
+  border-bottom: 1px solid var(--border-subtle);
+  isolation: isolate;
+}
+
+.hero__floodlights {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(ellipse 520px 340px at 12% 8%, oklch(68% 0.191 42 / 0.35), transparent 60%),
+    radial-gradient(ellipse 480px 340px at 88% 0%, oklch(68% 0.115 194 / 0.28), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 50% 120%, oklch(83% 0.165 91 / 0.10), transparent 60%);
+}
+
+.hero__pitch-lines {
+  position: absolute; inset: 0; z-index: -1; opacity: 0.5;
+  background-image:
+    repeating-linear-gradient(90deg, oklch(100% 0 0 / 0.03) 0, oklch(100% 0 0 / 0.03) 1px, transparent 1px, transparent 120px);
+  mask-image: linear-gradient(180deg, black, transparent 85%);
+}
+
+.hero__content { max-width: var(--container-wide); margin: 0 auto; position: relative; }
+
+.hero__badge {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  background: var(--bg-surface-2); border: 1px solid var(--border-default);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  border-radius: var(--radius-pill);
+  font: var(--text-caption); font-weight: 600; color: var(--text-secondary);
+  margin-bottom: var(--space-5);
+}
+.hero__badge .dot-live { margin-left: 0; }
+
+.hero__title {
+  font: var(--text-display);
+  letter-spacing: var(--tracking-tight);
+  max-width: 16ch;
+  background: linear-gradient(180deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  margin-bottom: var(--space-4);
+}
+.hero__title .accent {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+.hero__lede {
+  font: var(--text-body-lg); color: var(--text-secondary); max-width: 58ch; margin-bottom: var(--space-6);
+}
+
+.hero__stats {
+  display: flex; flex-wrap: wrap; gap: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+}
+.hero__stat-value {
+  font: var(--text-h2); font-family: var(--font-mono); font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.hero__stat-label {
+  font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption);
+  color: var(--text-tertiary); margin-top: var(--space-1);
+}
+
+/* Live pulse dot — reused across app for "this is happening right now" */
+.dot-live {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: var(--text-caption); font-weight: 700; text-transform: uppercase; letter-spacing: var(--tracking-caption);
+  color: var(--live);
+}
+.dot-live::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 0 0 oklch(72% 0.19 148 / 0.6);
+  animation: pulse-live 1.8s var(--ease-in-out) infinite;
+}
+@keyframes pulse-live {
+  0%   { box-shadow: 0 0 0 0 oklch(72% 0.19 148 / 0.55); }
+  70%  { box-shadow: 0 0 0 8px oklch(72% 0.19 148 / 0); }
+  100% { box-shadow: 0 0 0 0 oklch(72% 0.19 148 / 0); }
+}
+
+/* ==========================================================================
+   SHARED DOC/DEMO PATTERNS (swatches, showcase frames, code chips)
+   ========================================================================== */
+
+.demo-frame {
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4);
+}
+.demo-frame.is-column { flex-direction: column; align-items: stretch; }
+.demo-frame.is-dense { gap: var(--space-3); }
+
+.code-chip {
+  font: var(--text-body-sm); font-family: var(--font-mono);
+  background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  padding: 2px 8px; border-radius: var(--radius-sm); color: var(--teal-300);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-4); }
+@media (max-width: 860px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* Color swatches */
+.swatch-row { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-5); }
+.swatch {
+  width: 140px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+.swatch__fill { height: 76px; }
+.swatch__meta { padding: var(--space-2) var(--space-3); }
+.swatch__name { font: var(--text-body-sm); font-weight: 600; }
+.swatch__value { font: 400 0.6875rem/1.4 var(--font-mono); color: var(--text-tertiary); }
+
+.usage-note {
+  display: flex; gap: var(--space-3); align-items: flex-start;
+  background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--teal-500);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font: var(--text-body-sm); color: var(--text-secondary);
+  margin-top: var(--space-4);
+}
+.usage-note svg { width: 16px; height: 16px; stroke: var(--teal-400); flex-shrink: 0; margin-top: 2px; }
+
+/* Type scale rows */
+.type-row {
+  display: flex; align-items: baseline; gap: var(--space-5);
+  padding: var(--space-4) 0; border-bottom: 1px solid var(--border-subtle);
+}
+.type-row:last-child { border-bottom: none; }
+.type-row__meta { width: 180px; flex-shrink: 0; }
+.type-row__label { font: var(--text-body-sm); font-weight: 600; color: var(--text-primary); }
+.type-row__specs { font: 400 0.75rem/1.5 var(--font-mono); color: var(--text-tertiary); }
+.type-row__sample { min-width: 0; color: var(--text-primary); }
+@media (max-width: 640px) {
+  .type-row { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+  .type-row__meta { width: auto; }
+}
+
+/* Spacing scale */
+.space-row { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-2) 0; }
+.space-row__bar { background: var(--gradient-hero); height: 16px; border-radius: var(--radius-sm); }
+.space-row__name { width: 90px; font: var(--text-body-sm); font-weight: 600; flex-shrink: 0; }
+.space-row__px { width: 60px; font: 400 0.75rem/1 var(--font-mono); color: var(--text-tertiary); flex-shrink: 0; }
+
+/* Radius / shadow / motion showcase tiles */
+.token-tile {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  padding: var(--space-4); border-radius: var(--radius-md);
+  text-align: center;
+}
+.token-tile__box {
+  height: 64px; margin-bottom: var(--space-3);
+  background: var(--bg-surface-2);
+  display: flex; align-items: center; justify-content: center;
+}
+.token-tile__name { font: var(--text-body-sm); font-weight: 600; }
+.token-tile__value { font: 400 0.75rem/1.5 var(--font-mono); color: var(--text-tertiary); }
+
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-4); }
+@media (max-width: 640px) { .do-dont { grid-template-columns: 1fr; } }
+.do-dont__card {
+  border-radius: var(--radius-lg); padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+}
+.do-dont__card.is-do { background: var(--success-bg); border-color: oklch(72% 0.17 148 / 0.35); }
+.do-dont__card.is-dont { background: var(--error-bg); border-color: oklch(63% 0.21 26 / 0.35); }
+.do-dont__label {
+  display: flex; align-items: center; gap: var(--space-2);
+  font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption);
+  margin-bottom: var(--space-3); font-weight: 700;
+}
+.do-dont__card.is-do .do-dont__label { color: var(--success); }
+.do-dont__card.is-dont .do-dont__label { color: var(--error); }
+.do-dont__label svg { width: 14px; height: 14px; stroke: currentColor; }
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  font: var(--text-body-sm); font-weight: 700;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.btn svg { width: 16px; height: 16px; stroke: currentColor; flex-shrink: 0; }
+.btn:active { transform: scale(0.97); }
+
+.btn--primary {
+  background: var(--gradient-hero); color: var(--text-on-color);
+  box-shadow: var(--shadow-soft);
+}
+.btn--primary:hover { box-shadow: var(--shadow-glow-orange); transform: translateY(-1px); }
+
+.btn--secondary {
+  background: var(--bg-surface-2); color: var(--text-primary); border-color: var(--border-default);
+}
+.btn--secondary:hover { border-color: var(--teal-500); color: var(--teal-300); }
+
+.btn--tertiary {
+  background: transparent; color: var(--text-primary); border-color: var(--border-default);
+}
+.btn--tertiary:hover { background: var(--bg-surface); }
+
+.btn--ghost {
+  background: transparent; color: var(--text-secondary); padding-left: var(--space-3); padding-right: var(--space-3);
+}
+.btn--ghost:hover { background: var(--bg-surface); color: var(--text-primary); }
+
+.btn--destructive {
+  background: transparent; color: var(--error); border-color: oklch(63% 0.21 26 / 0.4);
+}
+.btn--destructive:hover { background: var(--error-bg); }
+
+.btn--sm { padding: var(--space-2) var(--space-4); font-size: 0.8125rem; }
+.btn--lg { padding: var(--space-4) var(--space-6); font-size: 1rem; }
+.btn--icon { padding: var(--space-3); border-radius: var(--radius-circle); }
+
+.btn:disabled, .btn.is-disabled {
+  opacity: 0.4; cursor: not-allowed; pointer-events: none; box-shadow: none; transform: none;
+}
+
+.btn.is-loading { color: transparent !important; position: relative; pointer-events: none; }
+.btn.is-loading::after {
+  content: ''; position: absolute; width: 16px; height: 16px;
+  border-radius: 50%; border: 2px solid oklch(100% 0 0 / 0.35); border-top-color: oklch(100% 0 0 / 0.95);
+  animation: btn-spin 0.7s linear infinite;
+}
+.btn--secondary.is-loading::after, .btn--tertiary.is-loading::after, .btn--ghost.is-loading::after {
+  border: 2px solid var(--border-strong); border-top-color: var(--text-primary);
+}
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+
+/* ==========================================================================
+   INPUTS
+   ========================================================================== */
+
+.field { display: flex; flex-direction: column; gap: var(--space-2); width: 100%; }
+.field__label {
+  font: var(--text-body-sm); font-weight: 600; color: var(--text-primary);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.field__optional { color: var(--text-tertiary); font-weight: 400; font-size: 0.75rem; }
+.field__hint { font: var(--text-body-sm); color: var(--text-tertiary); font-size: 0.8125rem; }
+.field__error { font: var(--text-body-sm); color: var(--error); font-size: 0.8125rem; display: flex; align-items: center; gap: 4px; }
+.field__error svg { width: 13px; height: 13px; stroke: currentColor; }
+
+.input, .textarea, .select {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-primary);
+  font: var(--text-body);
+  width: 100%;
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.input::placeholder, .textarea::placeholder { color: var(--text-tertiary); }
+.input:hover, .textarea:hover, .select:hover { border-color: var(--border-strong); }
+.input:focus, .textarea:focus, .select:focus {
+  outline: none; border-color: var(--teal-500); background: var(--bg-surface-2);
+  box-shadow: 0 0 0 3px oklch(68% 0.115 194 / 0.18);
+}
+.textarea { resize: vertical; min-height: 88px; }
+
+.select { appearance: none; background-image: none; padding-right: var(--space-7); position: relative; }
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: ''; position: absolute; right: var(--space-4); top: 50%; width: 9px; height: 9px;
+  border-right: 2px solid var(--text-tertiary); border-bottom: 2px solid var(--text-tertiary);
+  transform: translateY(-70%) rotate(45deg); pointer-events: none;
+}
+
+.field.is-error .input, .field.is-error .textarea, .field.is-error .select { border-color: var(--error); }
+.field.is-error .input:focus { box-shadow: 0 0 0 3px oklch(63% 0.21 26 / 0.18); }
+.field.is-disabled .input, .field.is-disabled .textarea, .field.is-disabled .select {
+  opacity: 0.45; cursor: not-allowed;
+}
+
+/* Checkbox */
+.checkbox, .radio {
+  display: flex; align-items: flex-start; gap: var(--space-3); cursor: pointer; font: var(--text-body-sm); color: var(--text-primary);
+}
+.checkbox input, .radio input { position: absolute; opacity: 0; width: 0; height: 0; }
+.checkbox__box, .radio__box {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+  border: 1.5px solid var(--border-strong); background: var(--bg-surface);
+  display: grid; place-items: center;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.checkbox__box { border-radius: var(--radius-sm); }
+.radio__box { border-radius: 50%; }
+.checkbox__box svg { width: 13px; height: 13px; stroke: var(--text-on-color); opacity: 0; transform: scale(0.5); transition: all var(--dur-fast) var(--ease-bounce); }
+.radio__box::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--text-on-color); opacity: 0; transform: scale(0.4); transition: all var(--dur-fast) var(--ease-bounce); }
+
+.checkbox input:checked + .checkbox__box, .radio input:checked + .radio__box {
+  background: var(--gradient-hero); border-color: transparent;
+}
+.checkbox input:checked + .checkbox__box svg { opacity: 1; transform: scale(1); }
+.radio input:checked + .radio__box::after { opacity: 1; transform: scale(1); }
+.checkbox input:focus-visible + .checkbox__box, .radio input:focus-visible + .radio__box {
+  outline: 2px solid var(--teal-400); outline-offset: 2px;
+}
+.checkbox input:disabled + .checkbox__box, .radio input:disabled + .radio__box { opacity: 0.4; }
+.checkbox.is-disabled, .radio.is-disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Toggle */
+.toggle { display: inline-flex; align-items: center; gap: var(--space-3); cursor: pointer; }
+.toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.toggle__track {
+  width: 42px; height: 24px; border-radius: var(--radius-pill);
+  background: var(--bg-surface-3); border: 1px solid var(--border-default);
+  position: relative; transition: background var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+}
+.toggle__thumb {
+  position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--text-secondary);
+  transition: transform var(--dur-base) var(--ease-bounce), background var(--dur-base) var(--ease-out);
+}
+.toggle input:checked ~ .toggle__track { background: var(--orange-500); border-color: var(--orange-500); }
+.toggle input:checked ~ .toggle__track .toggle__thumb { transform: translateX(18px); background: var(--text-on-color); }
+.toggle input:focus-visible ~ .toggle__track { outline: 2px solid var(--teal-400); outline-offset: 2px; }
+.toggle__label { font: var(--text-body-sm); font-weight: 500; }
+
+/* ==========================================================================
+   CARDS
+   ========================================================================== */
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.card--elevated { background: var(--bg-surface-2); box-shadow: var(--shadow-medium); border-color: var(--border-default); }
+.card--interactive { cursor: pointer; transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out); }
+.card--interactive:hover { transform: translateY(-3px); border-color: var(--teal-600); box-shadow: var(--shadow-medium); }
+
+.card--media { padding: 0; overflow: hidden; }
+.card--media .card__media {
+  height: 140px; position: relative;
+  background: var(--gradient-nft);
+}
+.card--media .card__media-scrim { position: absolute; inset: 0; background: var(--gradient-scrim); }
+.card--media .card__body { padding: var(--space-4); }
+
+.card__kicker { font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption); color: var(--text-tertiary); margin-bottom: var(--space-2); }
+.card__title { font: var(--text-h5); margin-bottom: var(--space-2); }
+.card__desc { font: var(--text-body-sm); color: var(--text-secondary); }
+.card__footer { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); }
+
+/* --- Signature component: the Prediction Tile ---------------------------
+   Core interaction of the whole app: tap an outcome, watch the odds
+   confirm your choice, feel a streak build. Every state below matters
+   because this tile is tapped hundreds of times per match. */
+
+.pred-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.pred-card__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+.pred-card__q { font: var(--text-h6); color: var(--text-primary); }
+.pred-card__meta { font: var(--text-caption); color: var(--text-tertiary); font-family: var(--font-mono); }
+
+.pred-tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-2); }
+.pred-tile {
+  position: relative;
+  background: var(--bg-surface-2);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.pred-tile:hover { border-color: var(--teal-500); transform: translateY(-2px); }
+.pred-tile:active { transform: translateY(0) scale(0.98); }
+.pred-tile__label { display: block; font: var(--text-body-sm); font-weight: 600; margin-bottom: 4px; }
+.pred-tile__odds { display: block; font: 700 1rem/1 var(--font-mono); color: var(--teal-300); font-variant-numeric: tabular-nums; }
+
+.pred-tile.is-selected {
+  border-color: var(--orange-500);
+  background: oklch(68% 0.191 42 / 0.14);
+  box-shadow: var(--shadow-glow-orange);
+}
+.pred-tile.is-selected .pred-tile__odds { color: var(--orange-300); }
+.pred-tile.is-selected::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(180deg, oklch(100% 0 0 / 0.06), transparent 40%);
+  pointer-events: none;
+}
+
+.pred-tile.is-correct { border-color: var(--success); background: var(--success-bg); }
+.pred-tile.is-correct .pred-tile__odds { color: var(--success); }
+.pred-tile.is-incorrect { border-color: var(--error); background: var(--error-bg); opacity: 0.7; }
+.pred-tile.is-locked { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+
+.pred-card__footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-subtle);
+}
+.streak-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--gradient-streak); color: var(--text-on-color);
+  font: var(--text-caption); font-weight: 800;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+}
+.streak-chip svg { width: 13px; height: 13px; fill: var(--text-on-color); stroke: none; }
+
+/* Score / match card */
+.match-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+}
+.match-card__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3); }
+.match-card__comp { font: var(--text-caption); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: var(--tracking-caption); }
+.match-card__teams { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.match-card__team { display: flex; align-items: center; gap: var(--space-2); flex: 1; min-width: 0; }
+.match-card__team.is-right { flex-direction: row-reverse; text-align: right; }
+.team-crest { width: 28px; height: 28px; border-radius: 50%; background: var(--bg-surface-3); flex-shrink: 0; display: grid; place-items: center; }
+.team-crest svg { width: 16px; height: 16px; stroke: var(--text-secondary); }
+.match-card__team-name { font: var(--text-body-sm); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.match-card__score {
+  font: 800 1.5rem/1 var(--font-mono); font-variant-numeric: tabular-nums;
+  padding: 0 var(--space-3); flex-shrink: 0;
+}
+
+/* ==========================================================================
+   NAVIGATION PATTERNS (in-app, shown as isolated demo frames)
+   ========================================================================== */
+
+/* Top bar */
+.demo-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg); padding: var(--space-3) var(--space-4);
+}
+.demo-topbar__left { display: flex; align-items: center; gap: var(--space-3); }
+.demo-topbar__logo { display: flex; align-items: center; gap: 8px; font: var(--text-h6); font-weight: 800; }
+.demo-topbar__logo-mark { width: 24px; height: 24px; border-radius: 7px; background: var(--gradient-hero); }
+.demo-topbar__right { display: flex; align-items: center; gap: var(--space-3); }
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--bg-surface-2); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+  cursor: pointer; position: relative; transition: all var(--dur-fast) var(--ease-out);
+}
+.icon-btn:hover { color: var(--text-primary); border-color: var(--border-strong); }
+.icon-btn svg { width: 17px; height: 17px; stroke: currentColor; }
+.icon-btn__badge {
+  position: absolute; top: -2px; right: -2px; min-width: 16px; height: 16px; padding: 0 3px;
+  background: var(--orange-500); border-radius: 999px; font: 700 0.625rem/16px var(--font-mono);
+  color: var(--text-on-color); text-align: center; border: 2px solid var(--bg-surface);
+}
+.avatar-sm { width: 32px; height: 32px; border-radius: 50%; background: var(--gradient-nft); border: 2px solid var(--border-default); }
+
+/* Bottom nav (mobile) */
+.demo-bottomnav {
+  display: flex; background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg); padding: var(--space-2); max-width: 380px;
+}
+.bottomnav__item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: var(--space-2) 0; border-radius: var(--radius-md); color: var(--text-tertiary);
+  font: 600 0.625rem/1 var(--font-body); text-transform: uppercase; letter-spacing: 0.04em;
+  cursor: pointer; transition: color var(--dur-fast) var(--ease-out);
+}
+.bottomnav__item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+.bottomnav__item.is-active { color: var(--orange-400); }
+.bottomnav__item.is-active svg { stroke: var(--orange-400); }
+.bottomnav__item:hover:not(.is-active) { color: var(--text-secondary); }
+
+/* Tabs */
+.demo-tabs { display: flex; gap: var(--space-5); border-bottom: 1px solid var(--border-subtle); }
+.tab-item {
+  padding: var(--space-3) 0; font: var(--text-body-sm); font-weight: 600; color: var(--text-tertiary);
+  border-bottom: 2px solid transparent; cursor: pointer; transition: color var(--dur-fast) var(--ease-out);
+  margin-bottom: -1px;
+}
+.tab-item:hover { color: var(--text-secondary); }
+.tab-item.is-active { color: var(--text-primary); border-color: var(--orange-500); }
+
+/* Pill tabs (segmented) */
+.demo-segment {
+  display: inline-flex; background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill); padding: 4px;
+}
+.segment-item {
+  padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill);
+  font: var(--text-body-sm); font-weight: 600; color: var(--text-tertiary); cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.segment-item.is-active { background: var(--bg-surface-3); color: var(--text-primary); box-shadow: var(--shadow-drop); }
+
+/* Sidebar nav demo (mini version of this page's own pattern) */
+.demo-sidebar {
+  width: 200px; background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg); padding: var(--space-3);
+}
+.demo-sidebar .sidenav__link { padding: var(--space-2); }
+
+/* ==========================================================================
+   BADGES & TAGS
+   ========================================================================== */
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font: 700 0.6875rem/1 var(--font-body); text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 5px 9px; border-radius: var(--radius-sm);
+}
+.badge--default { background: var(--bg-surface-3); color: var(--text-secondary); }
+.badge--live { background: var(--success-bg); color: var(--success); }
+.badge--live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse-live 1.8s infinite; }
+.badge--warning { background: var(--warning-bg); color: var(--warning); }
+.badge--error { background: var(--error-bg); color: var(--error); }
+.badge--info { background: oklch(68% 0.115 194 / 0.16); color: var(--teal-300); }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg-surface-2); border: 1px solid var(--border-default);
+  padding: 6px 12px; border-radius: var(--radius-pill);
+  font: var(--text-body-sm); font-weight: 600; color: var(--text-secondary);
+}
+.tag--rounded { border-radius: var(--radius-pill); }
+.tag--removable { padding-right: 8px; }
+.tag__remove { width: 14px; height: 14px; cursor: pointer; opacity: 0.7; }
+.tag__remove:hover { opacity: 1; }
+
+.count-badge {
+  display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px;
+  background: var(--orange-500); color: var(--text-on-color); border-radius: 999px;
+  font: 700 0.6875rem/1 var(--font-mono);
+}
+
+/* NFT rarity tags — used on achievement/collectible cards */
+.rarity-tag { padding: 4px 10px; border-radius: var(--radius-pill); font: 700 0.625rem/1 var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; }
+.rarity-tag--common { background: var(--bg-surface-3); color: var(--text-secondary); }
+.rarity-tag--rare { background: oklch(68% 0.115 194 / 0.18); color: var(--teal-300); }
+.rarity-tag--legendary { background: var(--gradient-streak); color: var(--text-on-color); }
+
+/* ==========================================================================
+   MODALS & OVERLAYS
+   ========================================================================== */
+
+.demo-modal-frame {
+  background: var(--bg-void); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-5); display: grid; place-items: center; position: relative; overflow: hidden;
+}
+.modal {
+  width: 100%;
+  max-width: 360px;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-heavy);
+  position: relative;
+}
+.modal__close {
+  position: absolute; top: var(--space-4); right: var(--space-4);
+  width: 28px; height: 28px; border-radius: 50%; background: var(--bg-surface-3);
+  display: grid; place-items: center; cursor: pointer; color: var(--text-tertiary);
+}
+.modal__close svg { width: 14px; height: 14px; stroke: currentColor; }
+.modal__icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--gradient-streak);
+  display: grid; place-items: center; margin-bottom: var(--space-4); box-shadow: var(--shadow-glow-yellow);
+}
+.modal__icon svg { width: 24px; height: 24px; stroke: var(--text-on-color); }
+.modal__title { font: var(--text-h4); margin-bottom: var(--space-2); }
+.modal__body { font: var(--text-body); color: var(--text-secondary); margin-bottom: var(--space-6); }
+.modal__actions { display: flex; gap: var(--space-3); }
+.modal__actions .btn { flex: 1; }
+
+.toast {
+  display: flex; align-items: center; gap: var(--space-3);
+  background: var(--bg-surface-3); border: 1px solid var(--border-default);
+  border-left: 3px solid var(--yellow-500);
+  border-radius: var(--radius-md); padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-medium); max-width: 360px;
+}
+.toast__icon { width: 32px; height: 32px; border-radius: 50%; background: var(--gradient-streak); display: grid; place-items: center; flex-shrink: 0; }
+.toast__icon svg { width: 16px; height: 16px; stroke: var(--text-on-color); }
+.toast__title { font: var(--text-body-sm); font-weight: 700; }
+.toast__body { font: var(--text-body-sm); color: var(--text-tertiary); }
+
+/* ==========================================================================
+   LISTS  (leaderboard rows, activity feed, notification list)
+   ========================================================================== */
+
+.list { display: flex; flex-direction: column; }
+.list-item {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.list-item:last-child { border-bottom: none; }
+.list-item__rank {
+  width: 28px; font: 700 0.9375rem/1 var(--font-mono); color: var(--text-tertiary); text-align: center; flex-shrink: 0;
+}
+.list-item__rank.is-top1 { color: var(--yellow-500); }
+.list-item__rank.is-top2 { color: oklch(85% 0.01 260); }
+.list-item__rank.is-top3 { color: var(--orange-400); }
+.list-item__avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-nft); flex-shrink: 0; }
+.list-item__body { flex: 1; min-width: 0; }
+.list-item__title { font: var(--text-body-sm); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-item__sub { font: 400 0.75rem/1.4 var(--font-body); color: var(--text-tertiary); }
+.list-item__value { font: 700 0.9375rem/1 var(--font-mono); color: var(--teal-300); flex-shrink: 0; }
+.list-item__action { flex-shrink: 0; }
+
+/* ==========================================================================
+   EMPTY STATES
+   ========================================================================== */
+
+.empty-state {
+  text-align: center; padding: var(--space-8) var(--space-5);
+  border: 1px dashed var(--border-default); border-radius: var(--radius-lg);
+  background: var(--bg-base);
+}
+.empty-state__icon {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto var(--space-4);
+  background: var(--bg-surface-2); display: grid; place-items: center; color: var(--text-tertiary);
+}
+.empty-state__icon svg { width: 26px; height: 26px; stroke: currentColor; }
+.empty-state__title { font: var(--text-h5); margin-bottom: var(--space-2); }
+.empty-state__desc { font: var(--text-body-sm); color: var(--text-tertiary); max-width: 34ch; margin: 0 auto var(--space-5); }
+
+/* ==========================================================================
+   LAYOUT & GRID
+   ========================================================================== */
+
+.grid-demo {
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px;
+  background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+.grid-demo__col {
+  background: oklch(68% 0.115 194 / 0.16); border: 1px dashed oklch(68% 0.115 194 / 0.4);
+  border-radius: 4px; height: 48px; display: grid; place-items: center;
+  font: 700 0.6875rem/1 var(--font-mono); color: var(--teal-300);
+}
+.breakpoint-row {
+  display: grid; grid-template-columns: 120px 1fr 100px; align-items: center; gap: var(--space-4);
+  padding: var(--space-3) 0; border-bottom: 1px solid var(--border-subtle);
+}
+.breakpoint-row:last-child { border-bottom: none; }
+.breakpoint-row__name { font: var(--text-body-sm); font-weight: 700; }
+.breakpoint-row__bar-track { height: 8px; background: var(--bg-base); border-radius: var(--radius-pill); overflow: hidden; }
+.breakpoint-row__bar { height: 100%; background: var(--gradient-hero); border-radius: var(--radius-pill); }
+.breakpoint-row__px { font: 400 0.75rem/1 var(--font-mono); color: var(--text-tertiary); text-align: right; }
+
+.container-demo {
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: var(--space-3);
+  background: var(--bg-base); margin-bottom: var(--space-3);
+}
+.container-demo__inner {
+  background: oklch(68% 0.191 42 / 0.14); border: 1px dashed oklch(68% 0.191 42 / 0.4);
+  height: 32px; border-radius: 4px; display: flex; align-items: center; padding: 0 var(--space-3);
+  font: 700 0.6875rem/1 var(--font-mono); color: var(--orange-300);
+}
+
+/* ==========================================================================
+   GUIDELINES  (principle cards, tone-of-voice, accessibility notes)
+   ========================================================================== */
+
+.principle-card {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.principle-card__num { font: 800 1.75rem/1 var(--font-mono); color: var(--bg-surface-3); -webkit-text-stroke: 1px var(--border-strong); margin-bottom: var(--space-3); }
+.principle-card__title { font: var(--text-h5); margin-bottom: var(--space-2); }
+.principle-card__desc { font: var(--text-body-sm); color: var(--text-secondary); }
+
+.voice-example {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2);
+}
+.voice-example__row { display: flex; align-items: flex-start; gap: var(--space-2); font: var(--text-body-sm); }
+.voice-example__row svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 3px; }
+.voice-example__row.is-good svg { stroke: var(--success); }
+.voice-example__row.is-bad svg { stroke: var(--error); color: var(--text-tertiary); }
+.voice-example__row.is-bad span { color: var(--text-tertiary); text-decoration: line-through; text-decoration-color: oklch(63% 0.21 26 / 0.5); }
+
+.a11y-row { display: flex; gap: var(--space-4); align-items: flex-start; padding: var(--space-4) 0; border-bottom: 1px solid var(--border-subtle); }
+.a11y-row:last-child { border-bottom: none; }
+.a11y-row__icon { width: 36px; height: 36px; border-radius: var(--radius-md); background: var(--bg-surface-2); display: grid; place-items: center; flex-shrink: 0; color: var(--teal-400); }
+.a11y-row__icon svg { width: 18px; height: 18px; stroke: currentColor; }
+.a11y-row__title { font: var(--text-body); font-weight: 700; margin-bottom: 4px; }
+.a11y-row__desc { font: var(--text-body-sm); color: var(--text-secondary); }
+
+/* Contrast check strip */
+.contrast-strip { display: flex; flex-wrap: wrap; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-subtle); }
+.contrast-cell { flex: 1; min-width: 130px; padding: var(--space-4); text-align: center; }
+.contrast-cell__ratio { font: 800 1.25rem/1 var(--font-mono); }
+.contrast-cell__label { font: 0.6875rem/1.4 var(--font-body); margin-top: 4px; opacity: 0.85; }
+
+/* ==========================================================================
+   BRAND ASSETS
+   ========================================================================== */
+
+.logo-lockup-demo {
+  display: flex; align-items: center; justify-content: center; height: 160px; border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+}
+.logo-lockup-demo.on-void { background: var(--bg-void); }
+.logo-lockup-demo.on-surface { background: var(--bg-surface-2); }
+.logo-lockup-demo.on-gradient { background: var(--gradient-hero); }
+.logo-lockup-demo.wrong { background: var(--bg-void); position: relative; }
+
+.brand-mark-lg { display: flex; align-items: center; gap: var(--space-3); }
+.brand-mark-lg__icon { width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--gradient-hero); display: grid; place-items: center; box-shadow: var(--shadow-glow-orange); }
+.brand-mark-lg__icon svg { width: 24px; height: 24px; stroke: var(--text-on-color); }
+.brand-mark-lg__wordmark { font: 800 1.375rem/1 var(--font-display); letter-spacing: var(--tracking-tight); }
+.logo-lockup-demo.on-gradient .brand-mark-lg__wordmark { color: var(--text-on-color); }
+.logo-lockup-demo.on-gradient .brand-mark-lg__icon { background: oklch(14% 0.02 264 / 0.35); box-shadow: none; backdrop-filter: blur(6px); }
+
+.icon-showcase-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: var(--space-3); }
+@media (max-width: 760px) { .icon-showcase-grid { grid-template-columns: repeat(4, 1fr); } }
+.icon-showcase-item {
+  aspect-ratio: 1; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  display: grid; place-items: center; color: var(--text-secondary); transition: all var(--dur-fast) var(--ease-out);
+}
+.icon-showcase-item:hover { color: var(--orange-400); border-color: var(--orange-600); }
+.icon-showcase-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+
+.illustration-swatch {
+  border-radius: var(--radius-lg); height: 140px; border: 1px solid var(--border-subtle);
+  display: flex; align-items: flex-end; padding: var(--space-4); position: relative; overflow: hidden;
+}
+.illustration-swatch svg { position: relative; z-index: 1; }
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.doc-footer {
+  padding: var(--space-7) 0; text-align: center;
+}
+.doc-footer__mark { display: inline-flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
+.doc-footer__text { font: var(--text-body-sm); color: var(--text-tertiary); }
+
+/* ==========================================================================
+   CONFETTI + MICRO-INTERACTIONS (JS-triggered)
+   ========================================================================== */
+
+.confetti-piece {
+  position: fixed; top: -10px; width: 8px; height: 8px; z-index: 200; pointer-events: none;
+  border-radius: 2px; will-change: transform, opacity;
+}
+
+.streak-toast-wrap {
+  position: fixed; top: var(--space-5); right: var(--space-5); z-index: 300;
+  display: flex; flex-direction: column; gap: var(--space-3); pointer-events: none;
+}
+.streak-toast-wrap .toast {
+  animation: toast-in var(--dur-slow) var(--ease-bounce);
+  pointer-events: auto;
+}
+.streak-toast-wrap .toast.is-leaving { animation: toast-out var(--dur-base) var(--ease-in-out) forwards; }
+@keyframes toast-in { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toast-out { to { transform: translateX(40px); opacity: 0; } }
+
+@media (max-width: 600px) {
+  .streak-toast-wrap { left: var(--space-4); right: var(--space-4); top: auto; bottom: var(--space-4); }
+}
+
+[data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+[data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ==========================================================================
+     ICON SPRITE — single stroke-based system, 1.75px stroke, 24x24 viewBox.
+     Referenced everywhere via <use href="#icon-name">.
+     ========================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="icon-ball" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 4.5h-5L8 10z"/><path d="M12 3v4M4.5 8.5l3 1.7M4.5 15.5l3-1.7M19.5 8.5l-3 1.7M19.5 15.5l-3-1.7M12 21v-4"/>
+    </g>
+    <g id="icon-bell" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/>
+    </g>
+    <g id="icon-user" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+    </g>
+    <g id="icon-home" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/>
+    </g>
+    <g id="icon-trophy" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 5H4v2a3 3 0 003 3M17 5h3v2a3 3 0 01-3 3"/><path d="M12 14v3M9 21h6M9.5 21c0-2 1-3 2.5-4 1.5 1 2.5 2 2.5 4"/>
+    </g>
+    <g id="icon-star" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L12 17l-5.6 3.1 1.4-6.3-4.8-4.3 6.4-.6z"/>
+    </g>
+    <g id="icon-fire" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22a6 6 0 006-6c0-3-2-4.5-3-7-.5 1.5-1.5 2-2 1 .5-3-1-5-3-6 .3 2-.5 3.5-2 5-2 2-3 4-3 7a6 6 0 006 6z"/>
+    </g>
+    <g id="icon-wallet" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14" r="1.2" fill="currentColor" stroke="none"/>
+    </g>
+    <g id="icon-nft" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 15l2.5-6L14 15M9.8 13h3.4"/>
+    </g>
+    <g id="icon-check" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12l5 5L20 6"/>
+    </g>
+    <g id="icon-x" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </g>
+    <g id="icon-menu" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </g>
+    <g id="icon-search" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+    </g>
+    <g id="icon-chart" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 20V10M12 20V4M20 20v-7"/>
+    </g>
+    <g id="icon-alert" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.6 18a1.8 1.8 0 001.6 2.7h15.6a1.8 1.8 0 001.6-2.7L13.7 3.9a1.8 1.8 0 00-3.4 0z"/>
+    </g>
+    <g id="icon-info" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+    </g>
+    <g id="icon-inbox" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12h4l2 3h4l2-3h4"/><path d="M5.5 5h13l1.5 7v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z"/>
+    </g>
+    <g id="icon-share" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.3 10.7l7.4-4.2M8.3 13.3l7.4 4.2"/>
+    </g>
+    <g id="icon-arrow-right" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14M13 6l6 6-6 6"/>
+    </g>
+    <g id="icon-layers" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5M3 18l9 5 9-5"/>
+    </g>
+    <g id="icon-type" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 6h14M12 6v14M8 20h8"/>
+    </g>
+    <g id="icon-grid" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+    </g>
+    <g id="icon-radius" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 20V10a6 6 0 016-6h10"/>
+    </g>
+    <g id="icon-shadow" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="5" width="11" height="11" rx="2"/><path d="M9 20h6a2 2 0 002-2V9" stroke-dasharray="2 2"/>
+    </g>
+    <g id="icon-motion" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 17c3-6 6-9 9-9M17 4l3 4-4 3"/>
+    </g>
+    <g id="icon-component" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="4" width="7" height="7" rx="1.5"/><circle cx="17.5" cy="7.5" r="3.5"/><path d="M4 16h7v4H4zM14 16h7v4h-7z"/>
+    </g>
+    <g id="icon-nav" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 6h18M3 12h18M3 18h9"/>
+    </g>
+    <g id="icon-badge" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l2 2h3v3l2 2-2 2v3h-3l-2 2-2-2H7v-3l-2-2 2-2V5h3z"/><circle cx="12" cy="12" r="2"/>
+    </g>
+    <g id="icon-modal" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="3" width="16" height="18" rx="2" opacity="0.35"/><rect x="7" y="8" width="10" height="9" rx="1.5"/>
+    </g>
+    <g id="icon-list" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="5" cy="7" r="1.2" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="5" cy="17" r="1.2" fill="currentColor" stroke="none"/><path d="M9 7h11M9 12h11M9 17h11"/>
+    </g>
+    <g id="icon-empty" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 13l3-8h10l3 8"/><path d="M4 13v6a1 1 0 001 1h14a1 1 0 001-1v-6"/><path d="M4 13h5a1 1 0 011 1 2 2 0 004 0 1 1 0 011-1h5"/>
+    </g>
+    <g id="icon-book" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 15.5z"/><path d="M4 15.5A2.5 2.5 0 016.5 13H20"/>
+    </g>
+    <g id="icon-eye" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>
+    </g>
+    <g id="icon-image" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.75"/><path d="M4 17l5-5 4 4 3-3 4 4"/>
+    </g>
+    <g id="icon-shield" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>
+    </g>
+    <g id="icon-corner" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4v6a10 10 0 0010 10h6"/>
+    </g>
+    <g id="icon-whistle" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="15" r="5"/><path d="M12.5 11.5L19 5h3v3l-6.5 6.5"/><path d="M22 8h-3"/>
+    </g>
+  </defs>
+</svg>
+
+<div class="nav-scrim" id="navScrim"></div>
+
+<button class="mobile-nav-toggle" id="navToggle" aria-label="Toggle navigation">
+  <svg viewBox="0 0 24 24"><use href="#icon-menu"/></svg> Menu
+</button>
+
+<div class="shell">
+  <!-- ============================== SIDE NAV ============================== -->
+  <nav class="sidenav" id="sidenav" aria-label="Design system sections">
+    <div class="sidenav__brand">
+      <div class="sidenav__brand-mark"><svg viewBox="0 0 24 24"><use href="#icon-ball"/></svg></div>
+      <div>
+        <div class="sidenav__brand-text">MatchFun</div>
+        <div class="sidenav__brand-sub">Design System</div>
+      </div>
+    </div>
+
+    <div class="sidenav__group">
+      <div class="sidenav__group-label">Foundations</div>
+      <a class="sidenav__link" data-nav href="#colors"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-eye"/></svg>Colors</a>
+      <a class="sidenav__link" data-nav href="#typography"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-type"/></svg>Typography</a>
+      <a class="sidenav__link" data-nav href="#spacing"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-grid"/></svg>Spacing &amp; Layout</a>
+      <a class="sidenav__link" data-nav href="#radius-shadow"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-radius"/></svg>Radius &amp; Shadow</a>
+      <a class="sidenav__link" data-nav href="#motion"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-motion"/></svg>Motion</a>
+    </div>
+
+    <div class="sidenav__group">
+      <div class="sidenav__group-label">Components</div>
+      <a class="sidenav__link" data-nav href="#buttons"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-component"/></svg>Buttons</a>
+      <a class="sidenav__link" data-nav href="#inputs"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-list"/></svg>Inputs</a>
+      <a class="sidenav__link" data-nav href="#cards"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-layers"/></svg>Cards &amp; Prediction Tiles</a>
+      <a class="sidenav__link" data-nav href="#navigation"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-nav"/></svg>Navigation</a>
+      <a class="sidenav__link" data-nav href="#badges"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-badge"/></svg>Badges &amp; Tags</a>
+      <a class="sidenav__link" data-nav href="#modals"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-modal"/></svg>Modals &amp; Overlays</a>
+      <a class="sidenav__link" data-nav href="#lists"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-list"/></svg>Lists</a>
+      <a class="sidenav__link" data-nav href="#empty-states"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-empty"/></svg>Empty States</a>
+    </div>
+
+    <div class="sidenav__group">
+      <div class="sidenav__group-label">Guidance</div>
+      <a class="sidenav__link" data-nav href="#guidelines"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-book"/></svg>Usage Guidelines</a>
+      <a class="sidenav__link" data-nav href="#accessibility"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-shield"/></svg>Accessibility</a>
+      <a class="sidenav__link" data-nav href="#voice"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-inbox"/></svg>Voice &amp; Tone</a>
+      <a class="sidenav__link" data-nav href="#brand"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-image"/></svg>Brand Assets</a>
+    </div>
+  </nav>
+
+  <!-- ============================== MAIN ============================== -->
+  <main class="main">
+
+
+    <!-- ============================== HERO ============================== -->
+    <header class="hero">
+      <div class="hero__floodlights"></div>
+      <div class="hero__pitch-lines"></div>
+      <div class="hero__content">
+        <div class="hero__badge"><span class="dot-live">Live</span>&nbsp;design system · v1.0</div>
+        <h1 class="hero__title">Tap. Predict. <span class="accent">Celebrate.</span></h1>
+        <p class="hero__lede">The complete visual language for MatchFun — every token, component, and pattern that turns 90 minutes of football into a live, tappable, shareable game. Built for the stadium at night: floodlit, high-contrast, fast to read one-handed.</p>
+        <div class="hero__stats">
+          <div>
+            <div class="hero__stat-value mono-num">48</div>
+            <div class="hero__stat-label">Design tokens</div>
+          </div>
+          <div>
+            <div class="hero__stat-value mono-num">30+</div>
+            <div class="hero__stat-label">Components</div>
+          </div>
+          <div>
+            <div class="hero__stat-value mono-num">3</div>
+            <div class="hero__stat-label">Signal colors</div>
+          </div>
+          <div>
+            <div class="hero__stat-value mono-num">4px</div>
+            <div class="hero__stat-label">Base grid</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- ============================== COLORS ============================== -->
+    <section class="section" id="colors">
+      <div class="section-container">
+        <div class="section__eyebrow">Foundations</div>
+        <h2 class="section__title">Color</h2>
+        <p class="section__desc">Every accent color in MatchFun has exactly one job. Orange means <strong>act</strong> — it's the only color on a primary button. Teal means <strong>live data</strong> — odds, scorelines, timestamps. Yellow means <strong>reward</strong> — streaks, NFTs, first place. If a color starts doing a second job, the system has broken down.</p>
+
+        <div class="subhead">Surfaces <span class="tag-count">6 tokens</span></div>
+        <div class="swatch-row">
+          <div class="swatch"><div class="swatch__fill" style="background:var(--bg-void)"></div><div class="swatch__meta"><div class="swatch__name">bg-void</div><div class="swatch__value">oklch(13% .02 264)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--bg-base)"></div><div class="swatch__meta"><div class="swatch__name">bg-base</div><div class="swatch__value">oklch(16% .024 264)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--bg-surface)"></div><div class="swatch__meta"><div class="swatch__name">bg-surface</div><div class="swatch__value">oklch(20% .026 262)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--bg-surface-2)"></div><div class="swatch__meta"><div class="swatch__name">bg-surface-2</div><div class="swatch__value">oklch(24% .028 261)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--bg-surface-3)"></div><div class="swatch__meta"><div class="swatch__name">bg-surface-3</div><div class="swatch__value">oklch(29% .03 260)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--border-strong)"></div><div class="swatch__meta"><div class="swatch__name">border-strong</div><div class="swatch__value">oklch(48% .03 255)</div></div></div>
+        </div>
+
+        <div class="subhead">Carnival Orange — Primary <span class="tag-count">act</span></div>
+        <div class="swatch-row">
+          <div class="swatch"><div class="swatch__fill" style="background:var(--orange-300)"></div><div class="swatch__meta"><div class="swatch__name">orange-300</div><div class="swatch__value">oklch(83% .12 44)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--orange-400)"></div><div class="swatch__meta"><div class="swatch__name">orange-400</div><div class="swatch__value">oklch(75% .165 43)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--orange-500)"></div><div class="swatch__meta"><div class="swatch__name">orange-500</div><div class="swatch__value">oklch(68% .191 42)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--orange-600)"></div><div class="swatch__meta"><div class="swatch__name">orange-600</div><div class="swatch__value">oklch(59% .185 39)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--orange-700)"></div><div class="swatch__meta"><div class="swatch__name">orange-700</div><div class="swatch__value">oklch(49% .16 36)</div></div></div>
+        </div>
+
+        <div class="subhead">Teal — Secondary <span class="tag-count">live data</span></div>
+        <div class="swatch-row">
+          <div class="swatch"><div class="swatch__fill" style="background:var(--teal-300)"></div><div class="swatch__meta"><div class="swatch__name">teal-300</div><div class="swatch__value">oklch(85% .075 196)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--teal-400)"></div><div class="swatch__meta"><div class="swatch__name">teal-400</div><div class="swatch__value">oklch(76% .1 195)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--teal-500)"></div><div class="swatch__meta"><div class="swatch__name">teal-500</div><div class="swatch__value">oklch(68% .115 194)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--teal-600)"></div><div class="swatch__meta"><div class="swatch__name">teal-600</div><div class="swatch__value">oklch(58% .108 193)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--teal-700)"></div><div class="swatch__meta"><div class="swatch__name">teal-700</div><div class="swatch__value">oklch(46% .09 192)</div></div></div>
+        </div>
+
+        <div class="subhead">Yellow — Accent <span class="tag-count">reward · use sparingly</span></div>
+        <div class="swatch-row">
+          <div class="swatch"><div class="swatch__fill" style="background:var(--yellow-300)"></div><div class="swatch__meta"><div class="swatch__name">yellow-300</div><div class="swatch__value">oklch(92% .09 95)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--yellow-400)"></div><div class="swatch__meta"><div class="swatch__name">yellow-400</div><div class="swatch__value">oklch(88% .135 93)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--yellow-500)"></div><div class="swatch__meta"><div class="swatch__name">yellow-500</div><div class="swatch__value">oklch(83% .165 91)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--yellow-600)"></div><div class="swatch__meta"><div class="swatch__name">yellow-600</div><div class="swatch__value">oklch(73% .16 80)</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--yellow-700)"></div><div class="swatch__meta"><div class="swatch__name">yellow-700</div><div class="swatch__value">oklch(62% .15 65)</div></div></div>
+        </div>
+
+        <div class="subhead">Semantic <span class="tag-count">5 tokens</span></div>
+        <div class="swatch-row">
+          <div class="swatch"><div class="swatch__fill" style="background:var(--success)"></div><div class="swatch__meta"><div class="swatch__name">success</div><div class="swatch__value">correct pick</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--warning)"></div><div class="swatch__meta"><div class="swatch__name">warning</div><div class="swatch__value">closing soon</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--error)"></div><div class="swatch__meta"><div class="swatch__name">error</div><div class="swatch__value">incorrect / destructive</div></div></div>
+          <div class="swatch"><div class="swatch__fill" style="background:var(--live)"></div><div class="swatch__meta"><div class="swatch__name">live</div><div class="swatch__value">match in progress</div></div></div>
+        </div>
+
+        <div class="subhead">Gradients <span class="tag-count">one per emotional beat</span></div>
+        <div class="swatch-row">
+          <div class="swatch" style="width:180px"><div class="swatch__fill" style="background:var(--gradient-hero)"></div><div class="swatch__meta"><div class="swatch__name">gradient-hero</div><div class="swatch__value">CTAs, hero</div></div></div>
+          <div class="swatch" style="width:180px"><div class="swatch__fill" style="background:var(--gradient-streak)"></div><div class="swatch__meta"><div class="swatch__name">gradient-streak</div><div class="swatch__value">streaks, rewards</div></div></div>
+          <div class="swatch" style="width:180px"><div class="swatch__fill" style="background:var(--gradient-nft)"></div><div class="swatch__meta"><div class="swatch__name">gradient-nft</div><div class="swatch__value">NFT / web3 surfaces</div></div></div>
+        </div>
+
+        <div class="usage-note">
+          <svg viewBox="0 0 24 24"><use href="#icon-info"/></svg>
+          <div><strong>Single-responsibility rule:</strong> if you reach for orange on anything that isn't the primary action, reach for teal or a neutral instead. Two signal colors on one surface reads as noise, not energy.</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================== TYPOGRAPHY ============================== -->
+    <section class="section" id="typography">
+      <div class="section-container">
+        <div class="section__eyebrow">Foundations</div>
+        <h2 class="section__title">Typography</h2>
+        <p class="section__desc">Inter carries every headline and UI label — clean, high x-height, reads fast at small sizes on a phone in a noisy stadium. <span class="code-chip">Space Mono</span> is reserved for anything that ticks: odds, scores, timers, wallet addresses. When a number is live, it's in mono. When it's prose, it's in Inter.</p>
+
+        <div class="demo-frame is-column">
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">Display</div><div class="type-row__specs">Inter 800 · clamp(44–68px)/1.02</div></div>
+            <div class="type-row__sample" style="font:var(--text-display)">Match Master</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">H1</div><div class="type-row__specs">Inter 800 · clamp(32–44px)/1.08</div></div>
+            <div class="type-row__sample" style="font:var(--text-h1)">Predict every moment</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">H2</div><div class="type-row__specs">Inter 800 · clamp(26–32px)/1.15</div></div>
+            <div class="type-row__sample" style="font:var(--text-h2)">Live leaderboard</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">H3</div><div class="type-row__specs">Inter 700 · 24px/1.25</div></div>
+            <div class="type-row__sample" style="font:var(--text-h3)">Argentina vs. France</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">H4</div><div class="type-row__specs">Inter 700 · 20px/1.35</div></div>
+            <div class="type-row__sample" style="font:var(--text-h4)">Next goalscorer</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">H5</div><div class="type-row__specs">Inter 600 · 17px/1.4</div></div>
+            <div class="type-row__sample" style="font:var(--text-h5)">Hot Streak unlocked</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">H6</div><div class="type-row__specs">Inter 600 · 15px/1.4</div></div>
+            <div class="type-row__sample" style="font:var(--text-h6)">Top predictor this week</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">Body Large</div><div class="type-row__specs">Inter 400 · 17px/1.6</div></div>
+            <div class="type-row__sample" style="font:var(--text-body-lg)">Tap to predict the next card, corner, or goal — odds update in real time.</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">Body</div><div class="type-row__specs">Inter 400 · 15px/1.55</div></div>
+            <div class="type-row__sample" style="font:var(--text-body)">Every correct prediction earns points, with bigger odds paying out bigger multipliers.</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">Body Small</div><div class="type-row__specs">Inter 400 · 13px/1.5</div></div>
+            <div class="type-row__sample" style="font:var(--text-body-sm)">Predictions lock 30 seconds before kickoff of the relevant play.</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">Caption</div><div class="type-row__specs">Inter 600 · 12px/1.4 · 0.08em</div></div>
+            <div class="type-row__sample" style="font:var(--text-caption);text-transform:uppercase;letter-spacing:var(--tracking-caption);color:var(--text-tertiary)">Full-time result</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta"><div class="type-row__label">Numeral / Mono</div><div class="type-row__specs">Space Mono 700 · tabular-nums</div></div>
+            <div class="type-row__sample mono-num" style="font-size:1.75rem;font-weight:700;color:var(--teal-300)">2 – 1 <span style="color:var(--text-tertiary);font-size:1rem">· 2.55 odds</span></div>
+          </div>
+        </div>
+
+        <div class="usage-note">
+          <svg viewBox="0 0 24 24"><use href="#icon-info"/></svg>
+          <div><strong>Why mono for numbers:</strong> odds and scores update multiple times a second during live play. Tabular numerals keep digit widths fixed so a changing "2.55 → 2.40" doesn't reflow the layout around it.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== SPACING & LAYOUT ============================== -->
+    <section class="section" id="spacing">
+      <div class="section-container">
+        <div class="section__eyebrow">Foundations</div>
+        <h2 class="section__title">Spacing &amp; Layout</h2>
+        <p class="section__desc">A strict 4px base grid. Every margin, padding, and gap in the app resolves to one of these nine steps — no arbitrary 13px or 22px values.</p>
+
+        <div class="demo-frame is-column">
+          <div class="space-row"><div class="space-row__name">space-1</div><div class="space-row__px">4px</div><div class="space-row__bar" style="width:4px"></div></div>
+          <div class="space-row"><div class="space-row__name">space-2</div><div class="space-row__px">8px</div><div class="space-row__bar" style="width:8px"></div></div>
+          <div class="space-row"><div class="space-row__name">space-3</div><div class="space-row__px">12px</div><div class="space-row__bar" style="width:12px"></div></div>
+          <div class="space-row"><div class="space-row__name">space-4</div><div class="space-row__px">16px</div><div class="space-row__bar" style="width:16px"></div></div>
+          <div class="space-row"><div class="space-row__name">space-5</div><div class="space-row__px">24px</div><div class="space-row__bar" style="width:24px"></div></div>
+          <div class="space-row"><div class="space-row__name">space-6</div><div class="space-row__px">32px</div><div class="space-row__bar" style="width:32px"></div></div>
+          <div class="space-row"><div class="space-row__name">space-7</div><div class="space-row__px">48px</div><div class="space-row__bar" style="width:48px"></div></div>
+          <div class="space-row"><div class="space-row__name">space-8</div><div class="space-row__px">64px</div><div class="space-row__bar" style="width:64px"></div></div>
+          <div class="space-row"><div class="space-row__name">space-9</div><div class="space-row__px">96px</div><div class="space-row__bar" style="width:96px"></div></div>
+        </div>
+
+        <div class="subhead">12-column grid</div>
+        <div class="grid-demo">
+          <div class="grid-demo__col">1</div><div class="grid-demo__col">2</div><div class="grid-demo__col">3</div><div class="grid-demo__col">4</div>
+          <div class="grid-demo__col">5</div><div class="grid-demo__col">6</div><div class="grid-demo__col">7</div><div class="grid-demo__col">8</div>
+          <div class="grid-demo__col">9</div><div class="grid-demo__col">10</div><div class="grid-demo__col">11</div><div class="grid-demo__col">12</div>
+        </div>
+
+        <div class="subhead">Container widths</div>
+        <div class="demo-frame is-column is-dense">
+          <div class="container-demo"><div class="container-demo__inner">mobile · 100% · gutter 16px</div></div>
+          <div class="container-demo"><div class="container-demo__inner" style="max-width:60%">tablet · 720px · gutter 24px</div></div>
+          <div class="container-demo"><div class="container-demo__inner" style="max-width:85%">desktop · 1200px · gutter 32px</div></div>
+          <div class="container-demo"><div class="container-demo__inner" style="max-width:100%">wide · 1360px · gutter 32px</div></div>
+        </div>
+
+        <div class="subhead">Responsive breakpoints</div>
+        <div class="demo-frame is-column is-dense">
+          <div class="breakpoint-row"><div class="breakpoint-row__name">Mobile</div><div class="breakpoint-row__bar-track"><div class="breakpoint-row__bar" style="width:24%"></div></div><div class="breakpoint-row__px">320–639px</div></div>
+          <div class="breakpoint-row"><div class="breakpoint-row__name">Tablet</div><div class="breakpoint-row__bar-track"><div class="breakpoint-row__bar" style="width:52%"></div></div><div class="breakpoint-row__px">640–959px</div></div>
+          <div class="breakpoint-row"><div class="breakpoint-row__name">Desktop</div><div class="breakpoint-row__bar-track"><div class="breakpoint-row__bar" style="width:78%"></div></div><div class="breakpoint-row__px">960–1359px</div></div>
+          <div class="breakpoint-row"><div class="breakpoint-row__name">Wide</div><div class="breakpoint-row__bar-track"><div class="breakpoint-row__bar" style="width:100%"></div></div><div class="breakpoint-row__px">1360px+</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== RADIUS & SHADOW ============================== -->
+    <section class="section" id="radius-shadow">
+      <div class="section-container">
+        <div class="section__eyebrow">Foundations</div>
+        <h2 class="section__title">Radius &amp; Shadow</h2>
+        <p class="section__desc">Corners get softer as elements get more tappable — sharp small radii for dense data, full pills for anything you tap with a thumb. On a dark surface, elevation reads through a black drop shadow at rest and a colored glow the moment something is selected or live.</p>
+
+        <div class="subhead">Radius</div>
+        <div class="grid-4">
+          <div class="token-tile"><div class="token-tile__box" style="border-radius:var(--radius-sm)"></div><div class="token-tile__name">sm</div><div class="token-tile__value">6px</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="border-radius:var(--radius-md)"></div><div class="token-tile__name">md</div><div class="token-tile__value">10px</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="border-radius:var(--radius-lg)"></div><div class="token-tile__name">lg</div><div class="token-tile__value">16px</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="border-radius:var(--radius-xl)"></div><div class="token-tile__name">xl</div><div class="token-tile__value">24px</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="border-radius:var(--radius-pill)"></div><div class="token-tile__name">pill</div><div class="token-tile__value">999px</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="border-radius:var(--radius-circle);width:64px;margin-inline:auto"></div><div class="token-tile__name">circle</div><div class="token-tile__value">50%</div></div>
+        </div>
+
+        <div class="subhead">Shadow &amp; elevation</div>
+        <div class="grid-4">
+          <div class="token-tile"><div class="token-tile__box" style="box-shadow:var(--shadow-drop);border-radius:var(--radius-md)"></div><div class="token-tile__name">drop</div><div class="token-tile__value">resting, 1px hairlines</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="box-shadow:var(--shadow-soft);border-radius:var(--radius-md)"></div><div class="token-tile__name">soft</div><div class="token-tile__value">cards</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="box-shadow:var(--shadow-medium);border-radius:var(--radius-md)"></div><div class="token-tile__name">medium</div><div class="token-tile__value">popovers, toasts</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="box-shadow:var(--shadow-heavy);border-radius:var(--radius-md)"></div><div class="token-tile__name">heavy</div><div class="token-tile__value">modals</div></div>
+        </div>
+        <div class="grid-3" style="margin-top:var(--space-4)">
+          <div class="token-tile"><div class="token-tile__box" style="box-shadow:var(--shadow-glow-orange);border-radius:var(--radius-md)"></div><div class="token-tile__name">glow-orange</div><div class="token-tile__value">selected tile, primary hover</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="box-shadow:var(--shadow-glow-teal);border-radius:var(--radius-md)"></div><div class="token-tile__name">glow-teal</div><div class="token-tile__value">focus, live data</div></div>
+          <div class="token-tile"><div class="token-tile__box" style="box-shadow:var(--shadow-glow-yellow);border-radius:var(--radius-md)"></div><div class="token-tile__name">glow-yellow</div><div class="token-tile__value">reward, NFT mint</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== MOTION ============================== -->
+    <section class="section" id="motion">
+      <div class="section-container">
+        <div class="section__eyebrow">Foundations</div>
+        <h2 class="section__title">Motion</h2>
+        <p class="section__desc">Fast and confident for anything the user directly touches; a single bounce reserved for moments worth celebrating. Hover this card.</p>
+
+        <div class="grid-3">
+          <div class="token-tile" style="cursor:pointer" onmouseenter="this.querySelector('.motion-demo').style.transform='translateX(20px)'" onmouseleave="this.querySelector('.motion-demo').style.transform='translateX(0)'">
+            <div class="token-tile__box" style="justify-content:flex-start;padding-left:8px"><div class="motion-demo" style="width:16px;height:16px;border-radius:50%;background:var(--orange-500);transition:transform var(--dur-fast) var(--ease-out)"></div></div>
+            <div class="token-tile__name">ease-out · 120ms</div><div class="token-tile__value">taps, hovers</div>
+          </div>
+          <div class="token-tile" style="cursor:pointer" onmouseenter="this.querySelector('.motion-demo2').style.transform='translateX(20px)'" onmouseleave="this.querySelector('.motion-demo2').style.transform='translateX(0)'">
+            <div class="token-tile__box" style="justify-content:flex-start;padding-left:8px"><div class="motion-demo2" style="width:16px;height:16px;border-radius:50%;background:var(--teal-500);transition:transform var(--dur-base) var(--ease-in-out)"></div></div>
+            <div class="token-tile__name">ease-in-out · 200ms</div><div class="token-tile__value">panels, tabs</div>
+          </div>
+          <div class="token-tile" style="cursor:pointer" onmouseenter="this.querySelector('.motion-demo3').style.transform='translateX(20px) scale(1.15)'" onmouseleave="this.querySelector('.motion-demo3').style.transform='translateX(0) scale(1)'">
+            <div class="token-tile__box" style="justify-content:flex-start;padding-left:8px"><div class="motion-demo3" style="width:16px;height:16px;border-radius:50%;background:var(--yellow-500);transition:transform var(--dur-slow) var(--ease-bounce)"></div></div>
+            <div class="token-tile__name">ease-bounce · 360ms</div><div class="token-tile__value">streaks, rewards, NFT mint</div>
+          </div>
+        </div>
+
+        <div class="usage-note">
+          <svg viewBox="0 0 24 24"><use href="#icon-motion"/></svg>
+          <div><strong>Rule of one bounce:</strong> <span class="code-chip">ease-bounce</span> is reserved for genuine celebration moments — a correct streak, an NFT mint, a leaderboard climb. If every hover state bounces, none of them feel earned.</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================== BUTTONS ============================== -->
+    <section class="section" id="buttons">
+      <div class="section-container">
+        <div class="section__eyebrow">Components</div>
+        <h2 class="section__title">Buttons</h2>
+        <p class="section__desc">One primary action per screen, always in the orange gradient. Everything else is secondary, tertiary, or ghost — competing CTAs dilute the one thing you actually want tapped.</p>
+
+        <div class="subhead">Variants</div>
+        <div class="demo-frame">
+          <button class="btn btn--primary">Predict Now</button>
+          <button class="btn btn--secondary">View Match</button>
+          <button class="btn btn--tertiary">Rules</button>
+          <button class="btn btn--ghost">Skip</button>
+          <button class="btn btn--destructive">Cancel Bet</button>
+        </div>
+
+        <div class="subhead">States</div>
+        <div class="demo-frame">
+          <button class="btn btn--primary">Default</button>
+          <button class="btn btn--primary" style="box-shadow:var(--shadow-glow-orange);transform:translateY(-1px)">Hover</button>
+          <button class="btn btn--primary" style="transform:scale(0.97)">Active</button>
+          <button class="btn btn--primary is-loading">Loading</button>
+          <button class="btn btn--primary" disabled>Disabled</button>
+        </div>
+
+        <div class="subhead">Sizes</div>
+        <div class="demo-frame">
+          <button class="btn btn--primary btn--sm">Small</button>
+          <button class="btn btn--primary">Default</button>
+          <button class="btn btn--primary btn--lg">Large</button>
+        </div>
+
+        <div class="subhead">With icons</div>
+        <div class="demo-frame">
+          <button class="btn btn--primary"><svg viewBox="0 0 24 24"><use href="#icon-ball"/></svg>Make Prediction</button>
+          <button class="btn btn--secondary"><svg viewBox="0 0 24 24"><use href="#icon-share"/></svg>Share</button>
+          <button class="btn btn--icon btn--secondary" aria-label="Notifications"><svg viewBox="0 0 24 24"><use href="#icon-bell"/></svg></button>
+        </div>
+
+        <div class="do-dont">
+          <div class="do-dont__card is-do">
+            <div class="do-dont__label"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg>Do</div>
+            <p style="font:var(--text-body-sm)">One primary button per screen or card — it's the single most important action available right now.</p>
+          </div>
+          <div class="do-dont__card is-dont">
+            <div class="do-dont__label"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg>Don't</div>
+            <p style="font:var(--text-body-sm)">Put two primary buttons side by side. If both matter equally, make one secondary.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== INPUTS ============================== -->
+    <section class="section" id="inputs">
+      <div class="section-container">
+        <div class="section__eyebrow">Components</div>
+        <h2 class="section__title">Inputs</h2>
+        <p class="section__desc">Form fields stay quiet until touched — a hairline border at rest, a teal glow on focus. Errors are never color-only: a message and an icon always ship with the red border.</p>
+
+        <div class="subhead">Text field states</div>
+        <div class="grid-3">
+          <div class="field">
+            <label class="field__label">Display name</label>
+            <input class="input" placeholder="e.g. GoalMachine22">
+            <div class="field__hint">Shown on the leaderboard</div>
+          </div>
+          <div class="field is-error">
+            <label class="field__label">Email</label>
+            <input class="input" value="not-an-email">
+            <div class="field__error"><svg viewBox="0 0 24 24"><use href="#icon-alert"/></svg>Enter a valid email address</div>
+          </div>
+          <div class="field is-disabled">
+            <label class="field__label">Wallet address</label>
+            <input class="input" value="Connect a wallet first" disabled>
+          </div>
+        </div>
+
+        <div class="subhead">Textarea &amp; select</div>
+        <div class="grid-2">
+          <div class="field">
+            <label class="field__label">Match comment <span class="field__optional">Optional</span></label>
+            <textarea class="textarea" placeholder="What did you see out there?"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label">Favorite team</label>
+            <div class="select-wrap"><select class="select"><option>Argentina</option><option>France</option><option>Brazil</option></select></div>
+          </div>
+        </div>
+
+        <div class="subhead">Checkbox, radio &amp; toggle</div>
+        <div class="demo-frame">
+          <label class="checkbox"><input type="checkbox" checked><span class="checkbox__box"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></span>Notify on kickoff</label>
+          <label class="checkbox"><input type="checkbox"><span class="checkbox__box"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></span>Notify on goals</label>
+          <label class="radio"><input type="radio" name="demo-r" checked><span class="radio__box"></span>Points mode</label>
+          <label class="radio"><input type="radio" name="demo-r"><span class="radio__box"></span>Bracket mode</label>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle__track"><span class="toggle__thumb"></span></span><span class="toggle__label">Live odds updates</span></label>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================== CARDS & PREDICTION TILES ============================== -->
+    <section class="section" id="cards">
+      <div class="section-container">
+        <div class="section__eyebrow">Components · Signature</div>
+        <h2 class="section__title">Cards &amp; Prediction Tiles</h2>
+        <p class="section__desc">The Prediction Tile is the single most-tapped element in the app — the whole game happens inside it. Tap an outcome, the tile fills with orange and glows to confirm the pick, then resolves to green or red the moment the play does. Try it below.</p>
+
+        <div class="subhead">The Prediction Tile <span class="tag-count">signature component</span></div>
+        <div class="pred-card" style="max-width:420px">
+          <div class="pred-card__header">
+            <div class="pred-card__q">Next goalscorer</div>
+            <div class="pred-card__meta mono-num">67:12</div>
+          </div>
+          <div class="pred-tiles" id="predDemo">
+            <div class="pred-tile" data-tile><span class="pred-tile__label">Mbappé</span><span class="pred-tile__odds mono-num">2.5</span></div>
+            <div class="pred-tile" data-tile><span class="pred-tile__label">Messi</span><span class="pred-tile__odds mono-num">3.1</span></div>
+            <div class="pred-tile" data-tile><span class="pred-tile__label">Dembélé</span><span class="pred-tile__odds mono-num">5.4</span></div>
+          </div>
+          <div class="pred-card__footer">
+            <span class="streak-chip"><svg viewBox="0 0 24 24"><use href="#icon-fire"/></svg>4 streak</span>
+            <span style="font:var(--text-body-sm);color:var(--text-tertiary)">Tap a tile to try it</span>
+          </div>
+        </div>
+
+        <div class="subhead">Tile states (static reference)</div>
+        <div class="demo-frame is-dense">
+          <div class="pred-tile" style="width:120px"><span class="pred-tile__label">Default</span><span class="pred-tile__odds mono-num">2.5</span></div>
+          <div class="pred-tile is-selected" style="width:120px"><span class="pred-tile__label">Selected</span><span class="pred-tile__odds mono-num">2.5</span></div>
+          <div class="pred-tile is-correct" style="width:120px"><span class="pred-tile__label">Correct</span><span class="pred-tile__odds mono-num">2.5</span></div>
+          <div class="pred-tile is-incorrect" style="width:120px"><span class="pred-tile__label">Incorrect</span><span class="pred-tile__odds mono-num">2.5</span></div>
+          <div class="pred-tile is-locked" style="width:120px"><span class="pred-tile__label">Locked</span><span class="pred-tile__odds mono-num">2.5</span></div>
+        </div>
+
+        <div class="subhead">Match card</div>
+        <div class="grid-2">
+          <div class="match-card">
+            <div class="match-card__top"><span class="match-card__comp">World Cup · Round of 16</span><span class="badge badge--live">Live</span></div>
+            <div class="match-card__teams">
+              <div class="match-card__team"><span class="team-crest"><svg viewBox="0 0 24 24"><use href="#icon-shield"/></svg></span><span class="match-card__team-name">Argentina</span></div>
+              <div class="match-card__score mono-num">2–1</div>
+              <div class="match-card__team is-right"><span class="team-crest"><svg viewBox="0 0 24 24"><use href="#icon-shield"/></svg></span><span class="match-card__team-name">France</span></div>
+            </div>
+          </div>
+          <div class="match-card">
+            <div class="match-card__top"><span class="match-card__comp">World Cup · Group B</span><span class="badge badge--default">Kickoff 18:00</span></div>
+            <div class="match-card__teams">
+              <div class="match-card__team"><span class="team-crest"><svg viewBox="0 0 24 24"><use href="#icon-shield"/></svg></span><span class="match-card__team-name">Brazil</span></div>
+              <div class="match-card__score mono-num" style="color:var(--text-tertiary)">vs</div>
+              <div class="match-card__team is-right"><span class="team-crest"><svg viewBox="0 0 24 24"><use href="#icon-shield"/></svg></span><span class="match-card__team-name">Spain</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subhead">General cards</div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card__kicker">Standard</div>
+            <div class="card__title">Weekly Recap</div>
+            <div class="card__desc">A flat surface for grouped content — settings rows, static info, secondary detail.</div>
+          </div>
+          <div class="card card--elevated card--interactive">
+            <div class="card__kicker">Elevated · Interactive</div>
+            <div class="card__title">Sharpshooter Badge</div>
+            <div class="card__desc">Lifts on hover — use for tappable rows that lead somewhere.</div>
+          </div>
+          <div class="card card--media card--interactive">
+            <div class="card__media"><div class="card__media-scrim"></div></div>
+            <div class="card__body">
+              <div class="card__kicker">Media</div>
+              <div class="card__title">Match Master NFT</div>
+              <div class="card__desc">Media surface for NFTs, match photography, achievement art.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="usage-note">
+          <svg viewBox="0 0 24 24"><use href="#icon-info"/></svg>
+          <div><strong>Selected vs. resolved:</strong> "selected" (orange) means the user's pick, awaiting the result. "Correct"/"incorrect" (green/red) only appear after the play resolves — never reuse orange for a resolved state, or users will think their bet is still live.</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================== NAVIGATION ============================== -->
+    <section class="section" id="navigation">
+      <div class="section-container">
+        <div class="section__eyebrow">Components</div>
+        <h2 class="section__title">Navigation</h2>
+        <p class="section__desc">Bottom nav on mobile — MatchFun is a phone-first, one-handed app during live play. Top bar and sidebar are reserved for desktop and settings-style screens.</p>
+
+        <div class="subhead">Top bar</div>
+        <div class="demo-topbar">
+          <div class="demo-topbar__left">
+            <div class="demo-topbar__logo"><div class="demo-topbar__logo-mark"></div>MatchFun</div>
+          </div>
+          <div class="demo-topbar__right">
+            <div class="icon-btn"><svg viewBox="0 0 24 24"><use href="#icon-search"/></svg></div>
+            <div class="icon-btn"><svg viewBox="0 0 24 24"><use href="#icon-bell"/></svg><span class="icon-btn__badge">3</span></div>
+            <div class="avatar-sm"></div>
+          </div>
+        </div>
+
+        <div class="subhead">Bottom nav</div>
+        <div class="demo-bottomnav">
+          <div class="bottomnav__item is-active"><svg viewBox="0 0 24 24"><use href="#icon-home"/></svg>Home</div>
+          <div class="bottomnav__item"><svg viewBox="0 0 24 24"><use href="#icon-ball"/></svg>Live</div>
+          <div class="bottomnav__item"><svg viewBox="0 0 24 24"><use href="#icon-trophy"/></svg>Ranks</div>
+          <div class="bottomnav__item"><svg viewBox="0 0 24 24"><use href="#icon-nft"/></svg>NFTs</div>
+          <div class="bottomnav__item"><svg viewBox="0 0 24 24"><use href="#icon-user"/></svg>Profile</div>
+        </div>
+
+        <div class="subhead">Tabs</div>
+        <div class="demo-tabs">
+          <div class="tab-item is-active">All</div>
+          <div class="tab-item">Bet Builder</div>
+          <div class="tab-item">Corners / Cards</div>
+          <div class="tab-item">Goals</div>
+          <div class="tab-item">Half</div>
+        </div>
+
+        <div class="subhead">Segmented control</div>
+        <div class="demo-segment">
+          <span class="segment-item is-active">This Week</span>
+          <span class="segment-item">All Time</span>
+          <span class="segment-item">Friends</span>
+        </div>
+
+        <div class="subhead">Sidebar (desktop settings/docs)</div>
+        <div class="demo-sidebar">
+          <a class="sidenav__link is-active"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-home"/></svg>Overview</a>
+          <a class="sidenav__link"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-user"/></svg>Account</a>
+          <a class="sidenav__link"><svg viewBox="0 0 24 24" width="15" height="15"><use href="#icon-wallet"/></svg>Wallet</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== BADGES & TAGS ============================== -->
+    <section class="section" id="badges">
+      <div class="section-container">
+        <div class="section__eyebrow">Components</div>
+        <h2 class="section__title">Badges &amp; Tags</h2>
+        <p class="section__desc">Badges carry status at a glance; tags carry filters and categories the user chose. Rarity tags borrow the streak gradient only for the rarest tier — legendary should feel genuinely rare.</p>
+
+        <div class="subhead">Status badges</div>
+        <div class="demo-frame">
+          <span class="badge badge--live">Live</span>
+          <span class="badge badge--default">Full Time</span>
+          <span class="badge badge--warning">Closing Soon</span>
+          <span class="badge badge--error">Locked</span>
+          <span class="badge badge--info">New</span>
+        </div>
+
+        <div class="subhead">Count badge</div>
+        <div class="demo-frame">
+          <span class="count-badge">3</span>
+          <span class="count-badge">12</span>
+          <span class="count-badge">99+</span>
+        </div>
+
+        <div class="subhead">Tags</div>
+        <div class="demo-frame">
+          <span class="tag">Soccer</span>
+          <span class="tag">World Cup 2026</span>
+          <span class="tag tag--removable">Argentina<svg class="tag__remove" viewBox="0 0 24 24"><use href="#icon-x"/></svg></span>
+        </div>
+
+        <div class="subhead">NFT rarity tags</div>
+        <div class="demo-frame">
+          <span class="rarity-tag rarity-tag--common">Common</span>
+          <span class="rarity-tag rarity-tag--rare">Rare</span>
+          <span class="rarity-tag rarity-tag--legendary">Legendary</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== MODALS & OVERLAYS ============================== -->
+    <section class="section" id="modals">
+      <div class="section-container">
+        <div class="section__eyebrow">Components</div>
+        <h2 class="section__title">Modals &amp; Overlays</h2>
+        <p class="section__desc">Confirmation dialogs interrupt deliberately — used for anything irreversible (canceling a pick, disconnecting a wallet). Toasts never block; they report and fade.</p>
+
+        <div class="subhead">Confirmation dialog</div>
+        <div class="demo-modal-frame">
+          <div class="modal">
+            <div class="modal__close"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg></div>
+            <div class="modal__icon"><svg viewBox="0 0 24 24"><use href="#icon-fire"/></svg></div>
+            <div class="modal__title">Hot Streak unlocked!</div>
+            <div class="modal__body">You've correctly predicted 5 in a row. Claim your NFT to make it permanent on Solana.</div>
+            <div class="modal__actions">
+              <button class="btn btn--tertiary">Later</button>
+              <button class="btn btn--primary">Claim NFT</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="subhead">Toast <span class="tag-count">non-blocking</span></div>
+        <div class="demo-frame">
+          <div class="toast">
+            <div class="toast__icon"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></div>
+            <div><div class="toast__title">Correct pick!</div><div class="toast__body">+120 points · streak now 5</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================== LISTS ============================== -->
+    <section class="section" id="lists">
+      <div class="section-container">
+        <div class="section__eyebrow">Components</div>
+        <h2 class="section__title">Lists</h2>
+        <p class="section__desc">The leaderboard is a list. Notifications are a list. Almost everything that scrolls in MatchFun is this same row pattern, restyled for context.</p>
+
+        <div class="subhead">Leaderboard rows</div>
+        <div class="card" style="max-width:480px;padding:var(--space-3) var(--space-4)">
+          <div class="list">
+            <div class="list-item">
+              <span class="list-item__rank is-top1 mono-num">1</span>
+              <span class="list-item__avatar"></span>
+              <div class="list-item__body"><div class="list-item__title">GoalMachine22</div><div class="list-item__sub">18-streak · Argentina fan</div></div>
+              <span class="list-item__value mono-num">4,820</span>
+            </div>
+            <div class="list-item">
+              <span class="list-item__rank is-top2 mono-num">2</span>
+              <span class="list-item__avatar"></span>
+              <div class="list-item__body"><div class="list-item__title">TacticalNerd</div><div class="list-item__sub">12-streak</div></div>
+              <span class="list-item__value mono-num">4,510</span>
+            </div>
+            <div class="list-item">
+              <span class="list-item__rank is-top3 mono-num">3</span>
+              <span class="list-item__avatar"></span>
+              <div class="list-item__body"><div class="list-item__title">VARWatcher</div><div class="list-item__sub">9-streak</div></div>
+              <span class="list-item__value mono-num">4,290</span>
+            </div>
+            <div class="list-item">
+              <span class="list-item__rank mono-num">4</span>
+              <span class="list-item__avatar"></span>
+              <div class="list-item__body"><div class="list-item__title">You</div><div class="list-item__sub">6-streak</div></div>
+              <span class="list-item__value mono-num">3,980</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="subhead">Notification / activity list</div>
+        <div class="card" style="max-width:480px;padding:var(--space-3) var(--space-4)">
+          <div class="list">
+            <div class="list-item">
+              <span class="list-item__avatar" style="background:var(--gradient-streak)"></span>
+              <div class="list-item__body"><div class="list-item__title">Streak bonus earned</div><div class="list-item__sub">2 minutes ago</div></div>
+              <span class="list-item__action"><svg viewBox="0 0 24 24" width="16" height="16" style="stroke:var(--text-tertiary)"><use href="#icon-arrow-right"/></svg></span>
+            </div>
+            <div class="list-item">
+              <span class="list-item__avatar"></span>
+              <div class="list-item__body"><div class="list-item__title">TacticalNerd passed you</div><div class="list-item__sub">14 minutes ago</div></div>
+              <span class="list-item__action"><svg viewBox="0 0 24 24" width="16" height="16" style="stroke:var(--text-tertiary)"><use href="#icon-arrow-right"/></svg></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== EMPTY STATES ============================== -->
+    <section class="section" id="empty-states">
+      <div class="section-container">
+        <div class="section__eyebrow">Components</div>
+        <h2 class="section__title">Empty States</h2>
+        <p class="section__desc">An empty screen is an invitation, not a dead end. Every empty state names what's missing and gives one clear action to fill it.</p>
+
+        <div class="grid-3">
+          <div class="empty-state">
+            <div class="empty-state__icon"><svg viewBox="0 0 24 24"><use href="#icon-ball"/></svg></div>
+            <div class="empty-state__title">No live matches</div>
+            <div class="empty-state__desc">Nothing's kicking off right now. Check today's schedule to set a reminder.</div>
+            <button class="btn btn--secondary btn--sm">View Schedule</button>
+          </div>
+          <div class="empty-state">
+            <div class="empty-state__icon"><svg viewBox="0 0 24 24"><use href="#icon-nft"/></svg></div>
+            <div class="empty-state__title">No NFTs yet</div>
+            <div class="empty-state__desc">Hit a 5-prediction streak or top a match leaderboard to mint your first one.</div>
+            <button class="btn btn--secondary btn--sm">Make a Prediction</button>
+          </div>
+          <div class="empty-state">
+            <div class="empty-state__icon"><svg viewBox="0 0 24 24"><use href="#icon-inbox"/></svg></div>
+            <div class="empty-state__title">You're all caught up</div>
+            <div class="empty-state__desc">No new notifications. We'll ping you the moment something happens.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================== USAGE GUIDELINES ============================== -->
+    <section class="section" id="guidelines">
+      <div class="section-container">
+        <div class="section__eyebrow">Guidance</div>
+        <h2 class="section__title">Usage Guidelines</h2>
+        <p class="section__desc">Four principles that decide most design questions before they become debates.</p>
+
+        <div class="grid-4">
+          <div class="principle-card">
+            <div class="principle-card__num">01</div>
+            <div class="principle-card__title">One job per color</div>
+            <div class="principle-card__desc">Orange acts, teal reports, yellow rewards. If you're unsure which to use, ask what the element is doing — not what looks nice.</div>
+          </div>
+          <div class="principle-card">
+            <div class="principle-card__num">02</div>
+            <div class="principle-card__title">Dark is the brand</div>
+            <div class="principle-card__desc">MatchFun reads like a stadium at night, not a spreadsheet in daylight. There is no light theme — see below.</div>
+          </div>
+          <div class="principle-card">
+            <div class="principle-card__num">03</div>
+            <div class="principle-card__title">Numbers are mono</div>
+            <div class="principle-card__desc">Anything that ticks live — odds, scores, timers — sits in Space Mono with tabular numerals so it never reflows.</div>
+          </div>
+          <div class="principle-card">
+            <div class="principle-card__num">04</div>
+            <div class="principle-card__title">Earn the bounce</div>
+            <div class="principle-card__desc">Ease-bounce motion is reserved for celebration. Everyday taps get a fast, quiet ease-out.</div>
+          </div>
+        </div>
+
+        <div class="subhead">Why no light mode</div>
+        <p style="font:var(--text-body);color:var(--text-secondary);max-width:68ch;margin-bottom:var(--space-4)">MatchFun is built to be read one-handed, at a glance, often at night, often next to an actual TV broadcast. Sofascore, Flashscore, and DraftKings all default to dark for the same reason — high-contrast data on black is faster to parse under match-day conditions than dark text on white. A toggle would mean maintaining two brands; instead every token here is tuned for exactly one.</p>
+
+        <div class="subhead">Component do's and don'ts</div>
+        <div class="do-dont">
+          <div class="do-dont__card is-do">
+            <div class="do-dont__label"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg>Do</div>
+            <p style="font:var(--text-body-sm)">Use the streak chip and gradient only when a real streak is active. It should mean something every time it appears.</p>
+          </div>
+          <div class="do-dont__card is-dont">
+            <div class="do-dont__label"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg>Don't</div>
+            <p style="font:var(--text-body-sm)">Decorate unrelated UI with the streak gradient just because it looks energetic — it should stay tied to the streak mechanic.</p>
+          </div>
+          <div class="do-dont__card is-do">
+            <div class="do-dont__label"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg>Do</div>
+            <p style="font:var(--text-body-sm)">Lock prediction tiles the instant a play starts, with a visible locked state — never let a user tap after the window closes.</p>
+          </div>
+          <div class="do-dont__card is-dont">
+            <div class="do-dont__label"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg>Don't</div>
+            <p style="font:var(--text-body-sm)">Rely on a disabled cursor alone to communicate "locked" — pair it with reduced opacity and the lock state styling.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== ACCESSIBILITY ============================== -->
+    <section class="section" id="accessibility">
+      <div class="section-container">
+        <div class="section__eyebrow">Guidance</div>
+        <h2 class="section__title">Accessibility</h2>
+        <p class="section__desc">A dark, high-energy aesthetic still has to hold up under WCAG AA. Every text token below was picked against its intended background.</p>
+
+        <div class="subhead">Contrast reference</div>
+        <div class="contrast-strip">
+          <div class="contrast-cell" style="background:var(--bg-void);color:var(--text-primary)"><div class="contrast-cell__ratio">18.5:1</div><div class="contrast-cell__label">text-primary on bg-void</div></div>
+          <div class="contrast-cell" style="background:var(--bg-surface);color:var(--text-secondary)"><div class="contrast-cell__ratio">9.1:1</div><div class="contrast-cell__label">text-secondary on bg-surface</div></div>
+          <div class="contrast-cell" style="background:var(--orange-500);color:var(--text-on-color)"><div class="contrast-cell__ratio">6.4:1</div><div class="contrast-cell__label">text-on-color on orange-500</div></div>
+          <div class="contrast-cell" style="background:var(--bg-surface);color:var(--teal-300)"><div class="contrast-cell__ratio">11.8:1</div><div class="contrast-cell__label">teal-300 on bg-surface</div></div>
+          <div class="contrast-cell" style="background:var(--bg-surface);color:var(--text-tertiary)"><div class="contrast-cell__ratio">5.0:1</div><div class="contrast-cell__label">text-tertiary on bg-surface</div></div>
+        </div>
+        <p style="font:var(--text-body-sm);color:var(--text-tertiary);margin-top:var(--space-3)">All ratios measured against WCAG 2.1 — every pair above clears 4.5:1, the AA threshold for body text. <span class="code-chip">text-tertiary</span> is the tightest in the system, which is why it's reserved for captions and hints rather than primary content.</p>
+
+        <div style="margin-top:var(--space-6)">
+          <div class="a11y-row">
+            <div class="a11y-row__icon"><svg viewBox="0 0 24 24"><use href="#icon-eye"/></svg></div>
+            <div><div class="a11y-row__title">Never color alone</div><div class="a11y-row__desc">Correct/incorrect prediction tiles pair color with an icon and a state class — colorblind users get the same information through shape, not just hue.</div></div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon"><svg viewBox="0 0 24 24"><use href="#icon-badge"/></svg></div>
+            <div><div class="a11y-row__title">Visible focus ring</div><div class="a11y-row__desc">Every interactive element gets a 2px teal outline on keyboard focus — <span class="code-chip">:focus-visible</span>, never suppressed.</div></div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon"><svg viewBox="0 0 24 24"><use href="#icon-motion"/></svg></div>
+            <div><div class="a11y-row__title">Reduced motion respected</div><div class="a11y-row__desc">Confetti, streak bounces, and scroll reveals all collapse to near-instant under <span class="code-chip">prefers-reduced-motion</span>.</div></div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon"><svg viewBox="0 0 24 24"><use href="#icon-list"/></svg></div>
+            <div><div class="a11y-row__title">Tap targets ≥ 44px</div><div class="a11y-row__desc">Prediction tiles, bottom nav items, and icon buttons all hold a minimum 44×44px hit area even when the visual icon is smaller.</div></div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon"><svg viewBox="0 0 24 24"><use href="#icon-inbox"/></svg></div>
+            <div><div class="a11y-row__title">ARIA labels on icon-only controls</div><div class="a11y-row__desc">Every icon button ships an <span class="code-chip">aria-label</span> — "Notifications," "Close," "Share" — never a bare glyph for screen readers.</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== VOICE & TONE ============================== -->
+    <section class="section" id="voice">
+      <div class="section-container">
+        <div class="section__eyebrow">Guidance</div>
+        <h2 class="section__title">Voice &amp; Tone</h2>
+        <p class="section__desc">MatchFun talks like a sharp mate who's watching the same match as you — short, confident, a little cheeky when you're winning, never patronizing when you're not.</p>
+
+        <div class="grid-2">
+          <div class="voice-example">
+            <div class="voice-example__row is-good"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span>"Locked in. Odds were 2.5 — nice pick."</span></div>
+            <div class="voice-example__row is-bad"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg><span>"Your prediction submission has been successfully processed."</span></div>
+          </div>
+          <div class="voice-example">
+            <div class="voice-example__row is-good"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span>"Missed that one. Dembélé's still up next."</span></div>
+            <div class="voice-example__row is-bad"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg><span>"Unfortunately, your prediction was incorrect. Better luck next time!"</span></div>
+          </div>
+          <div class="voice-example">
+            <div class="voice-example__row is-good"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span>"Nothing live right now — set a reminder for kickoff."</span></div>
+            <div class="voice-example__row is-bad"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg><span>"No data available. Please check back later."</span></div>
+          </div>
+          <div class="voice-example">
+            <div class="voice-example__row is-good"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg><span>"5 in a row. That's a Hot Streak — claim it."</span></div>
+            <div class="voice-example__row is-bad"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg><span>"Congratulations! You have achieved a milestone."</span></div>
+          </div>
+        </div>
+
+        <div class="usage-note">
+          <svg viewBox="0 0 24 24"><use href="#icon-info"/></svg>
+          <div><strong>Buttons keep their name:</strong> a button that says "Claim NFT" produces a toast that says "NFT claimed" — never "Success!" The vocabulary of an action stays identical from tap to confirmation.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== BRAND ASSETS ============================== -->
+    <section class="section" id="brand" style="border-bottom:none">
+      <div class="section-container">
+        <div class="section__eyebrow">Guidance</div>
+        <h2 class="section__title">Brand Assets</h2>
+        <p class="section__desc">The mark is a ball mid-motion inside a floodlit gradient tile — it should always sit on dark or on the hero gradient itself, never on a plain white card.</p>
+
+        <div class="subhead">Logo lockup</div>
+        <div class="grid-3">
+          <div class="logo-lockup-demo on-void"><div class="brand-mark-lg"><div class="brand-mark-lg__icon"><svg viewBox="0 0 24 24"><use href="#icon-ball"/></svg></div><div class="brand-mark-lg__wordmark">MatchFun</div></div></div>
+          <div class="logo-lockup-demo on-surface"><div class="brand-mark-lg"><div class="brand-mark-lg__icon"><svg viewBox="0 0 24 24"><use href="#icon-ball"/></svg></div><div class="brand-mark-lg__wordmark">MatchFun</div></div></div>
+          <div class="logo-lockup-demo on-gradient"><div class="brand-mark-lg"><div class="brand-mark-lg__icon"><svg viewBox="0 0 24 24"><use href="#icon-ball"/></svg></div><div class="brand-mark-lg__wordmark">MatchFun</div></div></div>
+        </div>
+
+        <div class="do-dont">
+          <div class="do-dont__card is-do">
+            <div class="do-dont__label"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg>Do</div>
+            <p style="font:var(--text-body-sm)">Keep at least 16px of clear space around the mark on every side — it needs room to read as a floodlit tile, not a busy icon.</p>
+          </div>
+          <div class="do-dont__card is-dont">
+            <div class="do-dont__label"><svg viewBox="0 0 24 24"><use href="#icon-x"/></svg>Don't</div>
+            <p style="font:var(--text-body-sm)">Place the mark on white, on photography, or recolor the gradient tile — it's calibrated for the night-pitch palette only.</p>
+          </div>
+        </div>
+
+        <div class="subhead">Icon system</div>
+        <p style="font:var(--text-body-sm);color:var(--text-secondary);margin-bottom:var(--space-4);max-width:60ch">Single stroke-based sprite, 1.75px stroke weight, 24×24 viewBox, rounded caps and joins. Icons inherit <span class="code-chip">currentColor</span> — never hard-code a fill.</p>
+        <div class="icon-showcase-grid">
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-ball"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-trophy"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-fire"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-nft"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-wallet"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-star"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-bell"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-shield"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-corner"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-whistle"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-chart"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-share"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-user"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-search"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-inbox"/></svg></div>
+          <div class="icon-showcase-item"><svg viewBox="0 0 24 24"><use href="#icon-badge"/></svg></div>
+        </div>
+
+        <div class="subhead">Illustration style</div>
+        <p style="font:var(--text-body-sm);color:var(--text-secondary);margin-bottom:var(--space-4);max-width:60ch">Flat gradient fields (hero, streak, or NFT gradients) with a single line-art motif — never full-color illustration or stock photography. Used behind empty states, achievement cards, and NFT placeholders.</p>
+        <div class="grid-3">
+          <div class="illustration-swatch" style="background:var(--gradient-hero)"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="oklch(100% 0 0 / 0.55)" stroke-width="1.5"><use href="#icon-ball"/></svg></div>
+          <div class="illustration-swatch" style="background:var(--gradient-streak)"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="oklch(20% 0.02 264 / 0.55)" stroke-width="1.5"><use href="#icon-fire"/></svg></div>
+          <div class="illustration-swatch" style="background:var(--gradient-nft)"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="oklch(100% 0 0 / 0.55)" stroke-width="1.5"><use href="#icon-nft"/></svg></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="doc-footer">
+      <div class="doc-footer__mark">
+        <div class="sidenav__brand-mark" style="width:28px;height:28px"><svg viewBox="0 0 24 24" width="16" height="16"><use href="#icon-ball"/></svg></div>
+        <span style="font:var(--text-h6);font-weight:800">MatchFun</span>
+      </div>
+      <p class="doc-footer__text">Design System v1.0 · Built for World Cup 2026 · Tap. Predict. Celebrate.</p>
+    </footer>
+
+  </main>
+</div>
+
+<div class="streak-toast-wrap" id="toastWrap"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------------------------------------------------------------
+     Mobile nav toggle
+     --------------------------------------------------------------------- */
+  var navToggle = document.getElementById('navToggle');
+  var sidenav = document.getElementById('sidenav');
+  var navScrim = document.getElementById('navScrim');
+
+  function closeNav() {
+    sidenav.classList.remove('is-open');
+    navScrim.classList.remove('is-open');
+  }
+  if (navToggle) {
+    navToggle.addEventListener('click', function () {
+      sidenav.classList.toggle('is-open');
+      navScrim.classList.toggle('is-open');
+    });
+    navScrim.addEventListener('click', closeNav);
+    document.querySelectorAll('.sidenav__link').forEach(function (link) {
+      link.addEventListener('click', closeNav);
+    });
+  }
+
+  /* ---------------------------------------------------------------------
+     Scroll-spy — highlight the active sidenav link as sections pass
+     --------------------------------------------------------------------- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('[data-nav]'));
+  var sections = navLinks.map(function (link) {
+    return document.getElementById(link.getAttribute('href').slice(1));
+  }).filter(Boolean);
+
+  function updateActiveNav() {
+    var scrollPos = window.scrollY + 140;
+    var current = sections[0];
+    sections.forEach(function (sec) {
+      if (sec.offsetTop <= scrollPos) current = sec;
+    });
+    navLinks.forEach(function (link) {
+      link.classList.toggle('is-active', link.getAttribute('href') === '#' + (current && current.id));
+    });
+  }
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
+
+  /* ---------------------------------------------------------------------
+     Scroll reveal for sections
+     --------------------------------------------------------------------- */
+  document.querySelectorAll('.section').forEach(function (el) {
+    el.setAttribute('data-reveal', '');
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -80px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
+    // Safety net: guarantee nothing stays invisible even if an intersection
+    // is somehow missed (fast programmatic scroll, unusual viewport, etc).
+    window.setTimeout(function () {
+      document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    }, 2500);
+  } else {
+    document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  /* ---------------------------------------------------------------------
+     Hero stat counter animation
+     --------------------------------------------------------------------- */
+  function animateCount(el, target, suffix) {
+    if (reduceMotion) { el.textContent = target + suffix; return; }
+    var start = 0;
+    var duration = 900;
+    var startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var value = Math.round(start + (target - start) * eased);
+      el.textContent = value + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var heroStats = document.querySelectorAll('.hero__stat-value');
+  var statTargets = [
+    { n: 48, s: '' }, { n: 30, s: '+' }, { n: 3, s: '' }, { n: 4, s: 'px' }
+  ];
+  heroStats.forEach(function (el, i) {
+    if (statTargets[i]) animateCount(el, statTargets[i].n, statTargets[i].s);
+  });
+
+  /* ---------------------------------------------------------------------
+     Prediction tile selection — the signature interaction.
+     Tap a tile: it becomes selected, streak chip pulses, then after a
+     beat it resolves to correct (with confetti + toast) or incorrect,
+     mirroring how the live app confirms a pick against the real play.
+     --------------------------------------------------------------------- */
+  var predTiles = document.querySelectorAll('#predDemo [data-tile]');
+  var predResolved = false;
+
+  predTiles.forEach(function (tile, idx) {
+    tile.addEventListener('click', function () {
+      if (predResolved) return;
+      predTiles.forEach(function (t) { t.classList.remove('is-selected'); });
+      tile.classList.add('is-selected');
+
+      window.setTimeout(function () {
+        predResolved = true;
+        predTiles.forEach(function (t) { t.classList.add('is-locked'); });
+        tile.classList.remove('is-locked', 'is-selected');
+        // First tile is always the "correct" outcome in this demo
+        if (idx === 0) {
+          tile.classList.add('is-correct');
+          fireConfetti();
+          showStreakToast('Correct pick!', '+120 points · streak now 5');
+        } else {
+          tile.classList.add('is-incorrect');
+          document.querySelectorAll('#predDemo [data-tile]')[0].classList.add('is-correct');
+        }
+        window.setTimeout(function () {
+          predResolved = false;
+          predTiles.forEach(function (t) {
+            t.classList.remove('is-locked', 'is-correct', 'is-incorrect', 'is-selected');
+          });
+        }, 2600);
+      }, 700);
+    });
+  });
+
+  /* ---------------------------------------------------------------------
+     Confetti burst
+     --------------------------------------------------------------------- */
+  function fireConfetti() {
+    if (reduceMotion) return;
+    var colors = [
+      'oklch(68% 0.191 42)',
+      'oklch(68% 0.115 194)',
+      'oklch(83% 0.165 91)',
+      'oklch(72% 0.17 148)'
+    ];
+    var count = 24;
+    for (var i = 0; i < count; i++) {
+      var piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      var startX = window.innerWidth / 2 + (Math.random() - 0.5) * 240;
+      piece.style.left = startX + 'px';
+      piece.style.background = colors[i % colors.length];
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      document.body.appendChild(piece);
+
+      var driftX = (Math.random() - 0.5) * 260;
+      var fallY = window.innerHeight * (0.55 + Math.random() * 0.35);
+      var rotate = (Math.random() - 0.5) * 720;
+      var duration = 1400 + Math.random() * 900;
+
+      piece.animate([
+        { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+        { transform: 'translate(' + driftX + 'px, ' + fallY + 'px) rotate(' + rotate + 'deg)', opacity: 0 }
+      ], { duration: duration, easing: 'cubic-bezier(.25,.46,.45,.94)', fill: 'forwards' });
+
+      (function (p, d) { window.setTimeout(function () { p.remove(); }, d + 50); })(piece, duration);
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Streak notification toast
+     --------------------------------------------------------------------- */
+  function showStreakToast(title, body) {
+    var wrap = document.getElementById('toastWrap');
+    var toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML =
+      '<div class="toast__icon"><svg viewBox="0 0 24 24" width="16" height="16"><use href="#icon-fire"/></svg></div>' +
+      '<div><div class="toast__title">' + title + '</div><div class="toast__body">' + body + '</div></div>';
+    wrap.appendChild(toast);
+    window.setTimeout(function () {
+      toast.classList.add('is-leaving');
+      window.setTimeout(function () { toast.remove(); }, 260);
+    }, 3200);
+  }
+
+})();
+</script>
+
+</body>
+</html>

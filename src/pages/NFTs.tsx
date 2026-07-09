@@ -1,0 +1,169 @@
+import { useState } from "react";
+
+const myNFTs = [
+  { id: 1, title: "Hot Streak #127", rarity: "legendary" as const, streak: 8, date: "Mar 2026" },
+  { id: 2, title: "Match Master", rarity: "rare" as const, streak: 5, date: "Feb 2026" },
+  { id: 3, title: "First Pick", rarity: "common" as const, streak: 1, date: "Jan 2026" },
+  { id: 4, title: "Corner Prophet", rarity: "rare" as const, streak: 6, date: "Jan 2026" },
+];
+
+const marketplaceNFTs = [
+  { id: 101, title: "Golden Boot", rarity: "legendary" as const, price: "2.5", edition: "1 / 10" },
+  { id: 102, title: "Hat-Trick Hero", rarity: "rare" as const, price: "1.2", edition: "1 / 50" },
+  { id: 103, title: "Clean Sheet", rarity: "common" as const, price: "0.3", edition: "1 / 200" },
+  { id: 104, title: "Last-Minute Winner", rarity: "legendary" as const, price: "3.0", edition: "1 / 5" },
+  { id: 105, title: "Assist King", rarity: "rare" as const, price: "0.8", edition: "1 / 100" },
+  { id: 106, title: "Penalty Drama", rarity: "common" as const, price: "0.2", edition: "1 / 300" },
+];
+
+const rarityFilters = ["All", "Legendary", "Rare", "Common"] as const;
+type Rarity = "all" | "legendary" | "rare" | "common";
+
+export default function NFTs() {
+  const [activeTab, setActiveTab] = useState<"collection" | "marketplace">("collection");
+  const [rarityFilter, setRarityFilter] = useState<Rarity>("all");
+
+  const filteredCollection = myNFTs.filter(
+    (n) => rarityFilter === "all" || n.rarity === rarityFilter,
+  );
+  const filteredMarket = marketplaceNFTs.filter(
+    (n) => rarityFilter === "all" || n.rarity === rarityFilter,
+  );
+
+  return (
+    <div className="page-container">
+      <div className="page-header">
+        <h1 className="page-title">NFTs</h1>
+        <p className="page-subtitle">
+          Your prediction streaks, immortalized on Solana.
+        </p>
+      </div>
+
+      {/* Tabs */}
+      <div className="nft-tabs">
+        <div className="tabs">
+          <button
+            className={`tab${activeTab === "collection" ? " is-active" : ""}`}
+            onClick={() => setActiveTab("collection")}
+          >
+            My Collection
+          </button>
+          <button
+            className={`tab${activeTab === "marketplace" ? " is-active" : ""}`}
+            onClick={() => setActiveTab("marketplace")}
+          >
+            Marketplace
+          </button>
+        </div>
+      </div>
+
+      {/* Collection */}
+      {activeTab === "collection" && (
+        <>
+          <div className="nft-toolbar">
+            <span className="nft-count">{filteredCollection.length} NFTs</span>
+            <div className="segment">
+              {rarityFilters.map((r) => (
+                <button
+                  key={r}
+                  className={`segment__item${rarityFilter === r.toLowerCase() ? " is-active" : ""}`}
+                  onClick={() => setRarityFilter(r.toLowerCase() as Rarity)}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {filteredCollection.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-state__icon">
+                <svg viewBox="0 0 24 24"><use href="#icon-nft" /></svg>
+              </div>
+              <div className="empty-state__title">No NFTs in this category</div>
+              <div className="empty-state__desc">
+                Predict on live matches to earn your first NFT.
+              </div>
+            </div>
+          ) : (
+            <div className="nft-grid">
+              {filteredCollection.map((nft) => (
+                <div className="nft-card card--interactive" key={nft.id}>
+                  <div className="nft-card__media">
+                    <svg viewBox="0 0 24 24"><use href="#icon-nft" /></svg>
+                    <span className={`rarity-tag rarity-tag--${nft.rarity}`}>
+                      {nft.rarity}
+                    </span>
+                  </div>
+                  <div className="nft-card__body">
+                    <div className="nft-card__title">{nft.title}</div>
+                    <div className="nft-card__meta">{nft.streak}-streak · {nft.date}</div>
+                    <div className="nft-card__footer">
+                      <span className="streak-badge">
+                        <svg viewBox="0 0 24 24" width="12" height="12"><use href="#icon-fire" /></svg>
+                        {nft.streak} streak
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Marketplace */}
+      {activeTab === "marketplace" && (
+        <>
+          <div className="nft-toolbar">
+            <span className="nft-count">{filteredMarket.length} available</span>
+            <div className="segment">
+              {rarityFilters.map((r) => (
+                <button
+                  key={r}
+                  className={`segment__item${rarityFilter === r.toLowerCase() ? " is-active" : ""}`}
+                  onClick={() => setRarityFilter(r.toLowerCase() as Rarity)}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {filteredMarket.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-state__icon">
+                <svg viewBox="0 0 24 24"><use href="#icon-nft" /></svg>
+              </div>
+              <div className="empty-state__title">No NFTs in this category</div>
+              <div className="empty-state__desc">
+                Check back later for new drops.
+              </div>
+            </div>
+          ) : (
+            <div className="nft-grid">
+              {filteredMarket.map((nft) => (
+                <div className="nft-card card--interactive" key={nft.id}>
+                  <div className="nft-card__media">
+                    <svg viewBox="0 0 24 24"><use href="#icon-nft" /></svg>
+                    <span className={`rarity-tag rarity-tag--${nft.rarity}`}>
+                      {nft.rarity}
+                    </span>
+                  </div>
+                  <div className="nft-card__body">
+                    <div className="nft-card__title">{nft.title}</div>
+                    <div className="nft-card__meta">{nft.edition}</div>
+                    <div className="nft-card__footer">
+                      <span className="nft-price mono-num">{nft.price} SOL</span>
+                      <button className="btn btn--accent btn--sm">Mint</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
