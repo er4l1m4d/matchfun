@@ -125,7 +125,7 @@ export default function Home() {
         <div className="home-match-list">
           {liveMatches.map((m) => (
             <Link to={`/live/${m.id}`} key={m.id} className="home-match-link">
-              <div className="match-card card--interactive">
+              <div className="match-card card--interactive stagger-item">
                 <div className="match-card__top">
                   <span className="match-card__comp">{m.comp}</span>
                   <span className="badge badge--live">{m.minute}</span>
@@ -155,7 +155,7 @@ export default function Home() {
         </div>
         <div className="home-quick-picks">
           {quickPicks.map((qp, i) => (
-            <div className="pred-card" key={i}>
+            <div className="pred-card stagger-item" key={i}>
               <div className="pred-card__header">
                 <div>
                   <div className="pred-card__q">{qp.q}</div>
@@ -183,7 +183,7 @@ export default function Home() {
         <div className="home-match-list">
           {upcomingMatches.map((m) => (
             <Link to={`/live/${m.id}`} key={m.id} className="home-match-link">
-              <div className="match-card card--interactive">
+              <div className="match-card card--interactive stagger-item">
                 <div className="match-card__top">
                   <span className="match-card__comp">{m.comp}</span>
                   <span className="badge badge--default">{m.time}</span>
@@ -213,7 +213,7 @@ export default function Home() {
         <div className="card home-predictions-card">
           <div className="lb-list">
             {recentPredictions.map((p, i) => (
-              <div className="lb-item" key={i}>
+              <div className="lb-item stagger-item" key={i}>
                 <div className={`pred-result-icon pred-result-icon--${p.result}`}>
                   <svg viewBox="0 0 24 24" width="16" height="16">
                     <use href={p.result === "correct" ? "#icon-check" : "#icon-x"} />

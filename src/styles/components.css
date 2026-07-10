@@ -1625,3 +1625,61 @@
   color: var(--text-secondary);
   max-width: 30ch;
 }
+
+/* ── Micro-interactions ─────────────────────────── */
+
+/* Page fade-in on load */
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-container {
+  animation: page-fade-in 0.35s var(--ease-out) both;
+}
+
+/* Staggered list item entrance */
+@keyframes stagger-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-item {
+  animation: stagger-in 0.3s var(--ease-out) both;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 40ms; }
+.stagger-item:nth-child(3) { animation-delay: 80ms; }
+.stagger-item:nth-child(4) { animation-delay: 120ms; }
+.stagger-item:nth-child(5) { animation-delay: 160ms; }
+.stagger-item:nth-child(6) { animation-delay: 200ms; }
+.stagger-item:nth-child(7) { animation-delay: 240ms; }
+.stagger-item:nth-child(8) { animation-delay: 280ms; }
+
+/* Card press feedback */
+.card--interactive {
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.card--interactive:active {
+  transform: scale(0.97);
+}
+
+/* Button press feedback */
+.btn {
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* Skeleton → content crossfade */
+.skeleton-wrapper {
+  animation: page-fade-in 0.3s var(--ease-out) both;
+}
+
+.content-wrapper {
+  animation: page-fade-in 0.3s var(--ease-out) both;
+}

@@ -142,7 +142,7 @@ export default function Live() {
           <div className="live-match-list">
             {filteredLive.map((m) => (
               <Link to={`/live/${m.id}`} key={m.id} className="live-match-link">
-                <div className="match-card card--interactive">
+                <div className="match-card card--interactive stagger-item">
                   <div className="match-card__top">
                     <span className="match-card__comp">{m.comp}</span>
                     <span className="badge badge--live">{m.minute}</span>
@@ -185,7 +185,7 @@ export default function Live() {
           <div className="live-match-list">
             {filteredUpcoming.map((m) => (
               <Link to={`/live/${m.id}`} key={m.id} className="live-match-link">
-                <div className="match-card card--interactive">
+                <div className="match-card card--interactive stagger-item">
                   <div className="match-card__top">
                     <span className="match-card__comp">{m.comp}</span>
                     <span className="badge badge--default">{m.time}</span>

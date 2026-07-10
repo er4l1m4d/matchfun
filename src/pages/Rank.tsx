@@ -181,7 +181,7 @@ export default function Rank() {
             <div className="lb-list">
               {rest.map((entry) => (
                 <div
-                  className={`lb-item${entry.isYou ? " lb-item--you" : ""}`}
+                  className={`lb-item stagger-item${entry.isYou ? " lb-item--you" : ""}`}
                   key={entry.rank}
                 >
                   <span className={`lb-item__rank mono-num${entry.isTop ? ` is-top${entry.isTop}` : ""}`}>

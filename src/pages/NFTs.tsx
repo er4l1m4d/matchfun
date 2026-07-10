@@ -141,7 +141,7 @@ export default function NFTs() {
           ) : (
             <div className="nft-grid">
               {filteredCollection.map((nft) => (
-                <div className="nft-card card--interactive" key={nft.id}>
+                <div className="nft-card card--interactive stagger-item" key={nft.id}>
                   <div className="nft-card__media">
                     <svg viewBox="0 0 24 24"><use href="#icon-nft" /></svg>
                     <span className={`rarity-tag rarity-tag--${nft.rarity}`}>
@@ -208,7 +208,7 @@ export default function NFTs() {
           ) : (
             <div className="nft-grid">
               {filteredMarket.map((nft) => (
-                <div className="nft-card card--interactive" key={nft.id}>
+                <div className="nft-card card--interactive stagger-item" key={nft.id}>
                   <div className="nft-card__media">
                     <svg viewBox="0 0 24 24"><use href="#icon-nft" /></svg>
                     <span className={`rarity-tag rarity-tag--${nft.rarity}`}>
