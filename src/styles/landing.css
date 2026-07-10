@@ -37,7 +37,7 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: url('/logo.svg') center / contain no-repeat;
+  background: url('/logo.png') center / contain no-repeat;
   flex-shrink: 0;
   display: block;
 }
