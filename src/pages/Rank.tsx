@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const tabs = ["Weekly", "All Time", "Friends"];
 
@@ -82,9 +83,15 @@ export default function Rank() {
           </div>
           <div className="empty-state__title">No friends yet</div>
           <div className="empty-state__desc">
-            Invite friends to compete on the leaderboard.
+            Invite friends to compete on the leaderboard. Challenge them to
+            beat your streak and climb the ranks together.
           </div>
-          <button className="btn btn--accent btn--sm">Invite friends</button>
+          <div className="empty-state__actions">
+            <button className="btn btn--accent btn--sm">Invite friends</button>
+            <Link to="/live" className="btn btn--ghost btn--sm">
+              Or predict solo
+            </Link>
+          </div>
         </div>
       )}
 

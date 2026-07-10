@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" fill="none">
+  <defs>
+    <linearGradient id="orange" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF6B35"/>
+      <stop offset="100%" stop-color="#C4401A"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer ring -->
+  <circle cx="82" cy="102" r="68" stroke="url(#orange)" stroke-width="10" fill="none"/>
+  
+  <!-- Soccer ball - pentagons (filled) -->
+  <path d="M82 60 L66 76 L52 76 L44 90 L52 106 L66 114 L82 106 L98 114 L114 106 L122 90 L114 76 L98 76 Z" fill="url(#orange)"/>
+  <path d="M82 60 L98 76 L114 76 L122 60 L114 44 L98 36 L82 44 Z" fill="url(#orange)"/>
+  <path d="M52 106 L36 122 L52 138 L66 130 Z" fill="url(#orange)"/>
+  <path d="M114 106 L130 122 L114 138 L98 130 Z" fill="url(#orange)"/>
+  <path d="M82 106 L66 130 L82 146 L98 130 Z" fill="url(#orange)"/>
+  
+  <!-- Soccer ball - hexagons (outline only) -->
+  <path d="M82 44 L66 36 L52 44 L44 60 L52 76 L66 76 Z" stroke="url(#orange)" stroke-width="3" fill="none"/>
+  <path d="M98 36 L114 44 L122 60 L114 76 L98 76 Z" stroke="url(#orange)" stroke-width="3" fill="none"/>
+  <path d="M36 122 L52 138 L66 130 L66 114 L52 106 Z" stroke="url(#orange)" stroke-width="3" fill="none"/>
+  <path d="M130 122 L114 138 L98 130 L98 114 L114 106 Z" stroke="url(#orange)" stroke-width="3" fill="none"/>
+  <path d="M66 130 L82 146 L98 130 L98 114 L82 106 L66 114 Z" stroke="url(#orange)" stroke-width="3" fill="none"/>
+  
+  <!-- Stars -->
+  <path d="M128 30 L131 39 L140 39 L133 44 L136 53 L128 48 L120 53 L123 44 L116 39 L125 39 Z" fill="url(#orange)"/>
+  <path d="M147 49 L149 54 L154 54 L150 57 L152 62 L147 59 L142 62 L144 57 L140 54 L145 54 Z" fill="url(#orange)"/>
+  
+  <!-- Motion lines -->
+  <line x1="135" y1="38" x2="158" y2="22" stroke="url(#orange)" stroke-width="5" stroke-linecap="round"/>
+  <line x1="143" y1="49" x2="162" y2="38" stroke="url(#orange)" stroke-width="5" stroke-linecap="round"/>
+  <line x1="147" y1="60" x2="162" y2="52" stroke="url(#orange)" stroke-width="5" stroke-linecap="round"/>
+  
+  <!-- Dot -->
+  <circle cx="166" cy="68" r="5" fill="url(#orange)"/>
+</svg>

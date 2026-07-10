@@ -175,13 +175,19 @@ export default function Live() {
           <div className="empty-state__icon">
             <svg viewBox="0 0 24 24"><use href="#icon-ball" /></svg>
           </div>
-          <div className="empty-state__title">No matches in this league</div>
+          <div className="empty-state__title">No matches in {activeLeague}</div>
           <div className="empty-state__desc">
-            Try a different filter or check back closer to kickoff.
+            This league doesn't have any live or upcoming matches right now.
+            Try another league or check back closer to kickoff.
           </div>
-          <button className="btn btn--secondary btn--sm" onClick={() => setActiveLeague("All")}>
-            Show all leagues
-          </button>
+          <div className="empty-state__actions">
+            <button className="btn btn--accent btn--sm" onClick={() => setActiveLeague("All")}>
+              Show all leagues
+            </button>
+            <Link to="/home" className="btn btn--ghost btn--sm">
+              Back to home
+            </Link>
+          </div>
         </div>
       )}
     </div>

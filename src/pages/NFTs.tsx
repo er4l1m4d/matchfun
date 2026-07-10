@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const myNFTs = [
   { id: 1, title: "Hot Streak #127", rarity: "legendary" as const, streak: 8, date: "Mar 2026" },
@@ -80,9 +81,21 @@ export default function NFTs() {
               <div className="empty-state__icon">
                 <svg viewBox="0 0 24 24"><use href="#icon-nft" /></svg>
               </div>
-              <div className="empty-state__title">No NFTs in this category</div>
+              <div className="empty-state__title">No {rarityFilter !== "all" ? rarityFilter : ""} NFTs yet</div>
               <div className="empty-state__desc">
-                Predict on live matches to earn your first NFT.
+                {rarityFilter !== "all"
+                  ? `You don't have any ${rarityFilter} NFTs. Keep predicting to earn rarer drops.`
+                  : "Predict on live matches to earn your first NFT. Hit a 5-streak to unlock a Hot Streak NFT."}
+              </div>
+              <div className="empty-state__actions">
+                <Link to="/live" className="btn btn--accent btn--sm">
+                  Start predicting
+                </Link>
+                {rarityFilter !== "all" && (
+                  <button className="btn btn--ghost btn--sm" onClick={() => setRarityFilter("all")}>
+                    Show all NFTs
+                  </button>
+                )}
               </div>
             </div>
           ) : (
@@ -135,9 +148,21 @@ export default function NFTs() {
               <div className="empty-state__icon">
                 <svg viewBox="0 0 24 24"><use href="#icon-nft" /></svg>
               </div>
-              <div className="empty-state__title">No NFTs in this category</div>
+              <div className="empty-state__title">No {rarityFilter !== "all" ? rarityFilter : ""} NFTs available</div>
               <div className="empty-state__desc">
-                Check back later for new drops.
+                {rarityFilter !== "all"
+                  ? `No ${rarityFilter} NFTs are listed right now. Try another rarity or check back later.`
+                  : "The marketplace is empty. New drops are minted when players hit streaks."}
+              </div>
+              <div className="empty-state__actions">
+                {rarityFilter !== "all" && (
+                  <button className="btn btn--ghost btn--sm" onClick={() => setRarityFilter("all")}>
+                    Show all NFTs
+                  </button>
+                )}
+                <Link to="/home" className="btn btn--secondary btn--sm">
+                  Back to home
+                </Link>
               </div>
             </div>
           ) : (

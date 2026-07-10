@@ -53,6 +53,11 @@ export default function Profile() {
             Share
           </button>
         </div>
+
+        <div className="pf-how-link">
+          <svg viewBox="0 0 24 24" width="14" height="14"><use href="#icon-info" /></svg>
+          <span>Points = odds × streak bonus. <strong>How scoring works</strong></span>
+        </div>
       </div>
 
       {/* Achievements */}

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Tooltip from "../components/Tooltip";
 
 const liveMatches = [
   {
@@ -69,10 +70,12 @@ export default function Home() {
       <div className="page-header">
         <div className="home-greeting">
           <h1 className="page-title">{getGreeting()}</h1>
-          <span className="streak-chip">
-            <svg viewBox="0 0 24 24"><use href="#icon-fire" /></svg>
-            5 streak
-          </span>
+          <Tooltip content="Correct predictions in a row. Hit 5 to unlock a Hot Streak NFT.">
+            <span className="streak-chip">
+              <svg viewBox="0 0 24 24"><use href="#icon-fire" /></svg>
+              5 streak
+            </span>
+          </Tooltip>
         </div>
         <p className="page-subtitle">
           {liveMatches.length} matches live right now.{" "}

@@ -39,7 +39,7 @@
   /* Text */
   --text-primary: oklch(97% 0.006 260);
   --text-secondary: oklch(78% 0.016 258);
-  --text-tertiary: oklch(62% 0.018 258);
+  --text-tertiary: oklch(67% 0.018 258);
   --text-disabled: oklch(42% 0.016 258);
   --text-on-color: oklch(14% 0.02 264);
 

@@ -23,6 +23,10 @@ export default function Layout() {
     <>
       <Icons />
 
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
+
       {isApp && (
         <>
           <header className="app-topbar">
@@ -67,7 +71,7 @@ export default function Layout() {
         </>
       )}
 
-      <main className={isApp ? "app-main" : isAuth ? "auth-main" : ""}>
+      <main id="main-content" className={isApp ? "app-main" : isAuth ? "auth-main" : ""}>
         <Outlet />
       </main>
     </>

@@ -99,6 +99,33 @@
   gap: var(--space-3);
 }
 
+/* ─── How scoring link ───────────────────────────────────────────────────── */
+
+.pf-how-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: var(--space-4);
+  font: var(--text-body-sm);
+  color: var(--text-tertiary);
+}
+
+.pf-how-link svg {
+  fill: none;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+.pf-how-link strong {
+  color: var(--teal-400);
+  cursor: pointer;
+}
+
+.pf-how-link strong:hover {
+  color: var(--teal-300);
+}
+
 /* ─── Section ────────────────────────────────────────────────────────────── */
 
 .pf-section {
