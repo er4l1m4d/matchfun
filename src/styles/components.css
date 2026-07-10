@@ -36,7 +36,7 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: url('/logo.png') center / contain no-repeat;
+  background: url('/logo.svg') center / contain no-repeat;
   flex-shrink: 0;
 }
 
@@ -224,7 +224,7 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-md);
-  background: url('/logo.png') center / contain no-repeat;
+  background: url('/logo.svg') center / contain no-repeat;
   flex-shrink: 0;
   display: block;
 }

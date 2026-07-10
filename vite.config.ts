@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["logo.png"],
+      includeAssets: ["logo.svg"],
       manifest: {
         name: "MatchFun — Tap. Predict. Celebrate.",
         short_name: "MatchFun",
@@ -20,19 +20,19 @@ export default defineConfig({
         start_url: "/",
         icons: [
           {
-            src: "logo.png",
+            src: "logo.svg",
             sizes: "192x192",
-            type: "image/png",
+            type: "image/svg+xml",
           },
           {
-            src: "logo.png",
+            src: "logo.svg",
             sizes: "512x512",
-            type: "image/png",
+            type: "image/svg+xml",
           },
           {
-            src: "logo.png",
+            src: "logo.svg",
             sizes: "512x512",
-            type: "image/png",
+            type: "image/svg+xml",
             purpose: "maskable",
           },
         ],
