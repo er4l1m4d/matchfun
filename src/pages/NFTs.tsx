@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useLoading from "../hooks/useLoading";
 
 const myNFTs = [
   { id: 1, title: "Hot Streak #127", rarity: "legendary" as const, streak: 8, date: "Mar 2026" },
@@ -20,9 +21,48 @@ const marketplaceNFTs = [
 const rarityFilters = ["All", "Legendary", "Rare", "Common"] as const;
 type Rarity = "all" | "legendary" | "rare" | "common";
 
+function NFTSkeleton() {
+  return (
+    <div className="page-container" aria-busy="true" aria-label="Loading NFTs">
+      <div className="page-header">
+        <div className="skeleton" style={{ width: "100px", height: "1.75rem", borderRadius: "6px" }} />
+        <div className="skeleton" style={{ width: "280px", height: "0.875rem", borderRadius: "4px", marginTop: "8px" }} />
+      </div>
+      <div style={{ display: "flex", gap: "var(--space-2)", marginBottom: "var(--space-4)" }}>
+        {([1, 2]).map((s) => (
+          <div key={s} className="skeleton" style={{ width: "110px", height: "36px", borderRadius: "var(--radius-sm)" }} />
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: "var(--space-2)", marginBottom: "var(--space-6)" }}>
+        {([1, 2, 3, 4]).map((s) => (
+          <div key={s} className="skeleton" style={{ width: "80px", height: "32px", borderRadius: "var(--radius-sm)" }} />
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "var(--space-4)" }}>
+        {([1, 2, 3, 4, 5, 6]).map((s) => (
+          <div key={s} className="card" style={{ padding: 0, overflow: "hidden" }}>
+            <div className="skeleton" style={{ width: "100%", height: "120px", borderRadius: 0 }} />
+            <div style={{ padding: "var(--space-3)" }}>
+              <div className="skeleton" style={{ width: "70%", height: "0.875rem", borderRadius: "4px", marginBottom: "6px" }} />
+              <div className="skeleton" style={{ width: "50%", height: "0.75rem", borderRadius: "4px", marginBottom: "8px" }} />
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div className="skeleton" style={{ width: "60px", height: "0.75rem", borderRadius: "4px" }} />
+                <div className="skeleton" style={{ width: "50px", height: "28px", borderRadius: "var(--radius-sm)" }} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function NFTs() {
   const [activeTab, setActiveTab] = useState<"collection" | "marketplace">("collection");
   const [rarityFilter, setRarityFilter] = useState<Rarity>("all");
+  const loading = useLoading();
+
+  if (loading) return <NFTSkeleton />;
 
   const filteredCollection = myNFTs.filter(
     (n) => rarityFilter === "all" || n.rarity === rarityFilter,

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Tooltip from "../components/Tooltip";
+import useLoading from "../hooks/useLoading";
 
 const liveMatches = [
   {
@@ -63,7 +64,36 @@ function getGreeting() {
   return "Good evening";
 }
 
+function HomeSkeleton() {
+  return (
+    <div className="page-container" aria-busy="true" aria-label="Loading home">
+      <div className="page-header">
+        <div className="skeleton" style={{ width: "180px", height: "1.75rem", borderRadius: "6px" }} />
+        <div className="skeleton" style={{ width: "260px", height: "0.875rem", borderRadius: "4px", marginTop: "8px" }} />
+      </div>
+      {([1, 2, 3, 4]).map((s) => (
+        <section key={s} className="home-section" style={{ marginBottom: "var(--space-6)" }}>
+          <div className="skeleton" style={{ width: "120px", height: "1rem", borderRadius: "4px", marginBottom: "var(--space-4)" }} />
+          <div className="card" style={{ padding: "var(--space-4)" }}>
+            <div style={{ display: "flex", gap: "var(--space-3)" }}>
+              <div className="skeleton" style={{ width: "40px", height: "40px", borderRadius: "var(--radius-full)" }} />
+              <div style={{ flex: 1 }}>
+                <div className="skeleton" style={{ width: "50%", height: "0.75rem", borderRadius: "4px", marginBottom: "6px" }} />
+                <div className="skeleton" style={{ width: "35%", height: "0.75rem", borderRadius: "4px" }} />
+              </div>
+            </div>
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
+  const loading = useLoading();
+
+  if (loading) return <HomeSkeleton />;
+
   return (
     <div className="page-container">
       {/* Greeting */}

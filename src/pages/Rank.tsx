@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useLoading from "../hooks/useLoading";
 
 const tabs = ["Weekly", "All Time", "Friends"];
 
@@ -26,8 +27,55 @@ function formatPoints(n: number) {
   return n.toLocaleString("en-US");
 }
 
+function RankSkeleton() {
+  return (
+    <div className="page-container" aria-busy="true" aria-label="Loading leaderboard">
+      <div className="page-header">
+        <div className="skeleton" style={{ width: "170px", height: "1.75rem", borderRadius: "6px" }} />
+        <div className="skeleton" style={{ width: "240px", height: "0.875rem", borderRadius: "4px", marginTop: "8px" }} />
+      </div>
+      <div className="rank-stats">
+        {([1, 2, 3, 4]).map((s) => (
+          <div key={s} className="stat-card" style={{ textAlign: "center" }}>
+            <div className="skeleton" style={{ width: "60px", height: "1.5rem", borderRadius: "4px", margin: "0 auto 8px" }} />
+            <div className="skeleton" style={{ width: "50px", height: "0.625rem", borderRadius: "4px", margin: "0 auto" }} />
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: "var(--space-2)", marginBottom: "var(--space-6)" }}>
+        {([1, 2, 3]).map((s) => (
+          <div key={s} className="skeleton" style={{ width: "80px", height: "36px", borderRadius: "var(--radius-sm)" }} />
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", gap: "var(--space-4)", marginBottom: "var(--space-8)" }}>
+        {[1, 2, 3].map((s) => (
+          <div key={s} style={{ textAlign: "center" }}>
+            <div className="skeleton" style={{ width: "48px", height: "48px", borderRadius: "var(--radius-full)", margin: "0 auto 8px" }} />
+            <div className="skeleton" style={{ width: "70px", height: "0.75rem", borderRadius: "4px", margin: "0 auto 4px" }} />
+            <div className="skeleton" style={{ width: "50px", height: "0.625rem", borderRadius: "4px", margin: "0 auto" }} />
+          </div>
+        ))}
+      </div>
+      {[1, 2, 3, 4, 5].map((s) => (
+        <div key={s} className="card" style={{ padding: "var(--space-3) var(--space-4)", marginBottom: "var(--space-2)", display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+          <div className="skeleton" style={{ width: "24px", height: "0.875rem", borderRadius: "4px" }} />
+          <div className="skeleton" style={{ width: "32px", height: "32px", borderRadius: "var(--radius-full)" }} />
+          <div style={{ flex: 1 }}>
+            <div className="skeleton" style={{ width: "80px", height: "0.875rem", borderRadius: "4px", marginBottom: "4px" }} />
+            <div className="skeleton" style={{ width: "50px", height: "0.625rem", borderRadius: "4px" }} />
+          </div>
+          <div className="skeleton" style={{ width: "50px", height: "0.875rem", borderRadius: "4px" }} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Rank() {
   const [activeTab, setActiveTab] = useState("Weekly");
+  const loading = useLoading();
+
+  if (loading) return <RankSkeleton />;
 
   const leaders = activeTab === "All Time" ? allTimeLeaders : weeklyLeaders;
   const podium = leaders.filter((l) => l.isTop).slice(0, 3);

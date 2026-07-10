@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import useLoading from "../hooks/useLoading";
 
 const liveMatches = [
   {
@@ -59,8 +60,46 @@ const upcomingMatches = [
 
 const leagues = ["All", "World Cup", "Premier League", "La Liga"];
 
+function LiveSkeleton() {
+  return (
+    <div className="page-container" aria-busy="true" aria-label="Loading matches">
+      <div className="page-header">
+        <div className="skeleton" style={{ width: "160px", height: "1.75rem", borderRadius: "6px" }} />
+        <div className="skeleton" style={{ width: "220px", height: "0.875rem", borderRadius: "4px", marginTop: "8px" }} />
+      </div>
+      <div style={{ display: "flex", gap: "var(--space-2)", marginBottom: "var(--space-6)" }}>
+        {([1, 2, 3, 4]).map((s) => (
+          <div key={s} className="skeleton" style={{ width: "90px", height: "36px", borderRadius: "var(--radius-sm)" }} />
+        ))}
+      </div>
+      {[1, 2, 3].map((s) => (
+        <div key={s} className="card" style={{ padding: "var(--space-4)", marginBottom: "var(--space-3)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-3)" }}>
+            <div className="skeleton" style={{ width: "40%", height: "0.75rem", borderRadius: "4px" }} />
+            <div className="skeleton" style={{ width: "50px", height: "0.75rem", borderRadius: "4px" }} />
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div className="skeleton" style={{ width: "28px", height: "28px", borderRadius: "var(--radius-full)" }} />
+              <div className="skeleton" style={{ width: "80px", height: "0.875rem", borderRadius: "4px" }} />
+            </div>
+            <div className="skeleton" style={{ width: "50px", height: "1rem", borderRadius: "4px" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div className="skeleton" style={{ width: "28px", height: "28px", borderRadius: "var(--radius-full)" }} />
+              <div className="skeleton" style={{ width: "80px", height: "0.875rem", borderRadius: "4px" }} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Live() {
   const [activeLeague, setActiveLeague] = useState("All");
+  const loading = useLoading();
+
+  if (loading) return <LiveSkeleton />;
 
   const filteredLive = liveMatches.filter(
     (m) => activeLeague === "All" || m.comp.includes(activeLeague),
