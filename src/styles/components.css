@@ -14,6 +14,7 @@
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--space-3) var(--space-5);
+  padding-top: max(var(--space-3), env(safe-area-inset-top));
 }
 
 .app-topbar__left {
@@ -46,8 +47,8 @@
 }
 
 .icon-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -492,8 +493,9 @@
 }
 
 .btn--sm {
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-4);
   font-size: 0.8125rem;
+  min-height: 44px;
 }
 
 .btn--full {
@@ -799,10 +801,18 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
   padding: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+
+.segment::-webkit-scrollbar {
+  display: none;
 }
 
 .segment__item {
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-pill);
   font: var(--text-body-sm);
   font-weight: 600;
@@ -811,6 +821,7 @@
   transition: all var(--dur-fast) var(--ease-out);
   border: none;
   background: none;
+  min-height: 44px;
 }
 
 .segment__item.is-active {
@@ -944,6 +955,13 @@
   display: flex;
   gap: var(--space-5);
   border-bottom: 1px solid var(--border-subtle);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tab {
@@ -959,6 +977,9 @@
   border-top: none;
   border-left: none;
   border-right: none;
+  min-height: 44px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tab:hover {
@@ -1103,6 +1124,7 @@
   color: var(--text-primary);
   font: var(--text-body);
   width: 100%;
+  min-height: 48px;
   transition:
     border-color var(--dur-fast) var(--ease-out),
     box-shadow var(--dur-fast) var(--ease-out),
